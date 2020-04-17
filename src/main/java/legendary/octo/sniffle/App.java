@@ -5,7 +5,7 @@ package legendary.octo.sniffle;
 
 public class App {
     public String getGreeting() {
-        return "Hello world.";
+        return "Hello world Test";
     }
 
     public static void main(String[] args) {
