@@ -8,11 +8,12 @@ import java.io.IOException;
 
 import com.google.common.io.Resources;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
+import lombok.NonNull;
+
 public class BmpFileTest {
-    private @NotNull byte[] load(@NotNull String path) {
+    private @NonNull byte[] load(@NonNull String path) {
         try {
             return Resources.toByteArray(Resources.getResource(path));
         } catch (IOException e) {

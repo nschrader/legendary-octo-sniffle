@@ -1,17 +1,17 @@
 package legendary.octo.sniffle.io;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 enum BmpFileFieldSize {
     _1(1), _2(2), _4(4);
 
-    private @NotNull Integer val;
+    private @NonNull Integer val;
 
-    BmpFileFieldSize(@NotNull Integer val) {
+    BmpFileFieldSize(@NonNull Integer val) {
         this.val = val;
     }
 
-    public @NotNull Integer val() {
+    public @NonNull Integer val() {
         return val;
     }
 }

@@ -5,27 +5,27 @@ import static legendary.octo.sniffle.io.BmpFileField.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 public class BmpFile {
-    public static final @NotNull Integer HEADER_BYTES = 14;
+    public static final @NonNull Integer HEADER_BYTES = 14;
 
-    public final @NotNull Integer fileSize;
-    public final @NotNull Integer imageOffset;
-    public final @NotNull Integer dibSize;
-    public final @NotNull Integer width;
-    public final @NotNull Integer height;
-    public final @NotNull Integer horizontalResolution;
-    public final @NotNull Integer verticalResolution;
+    public final @NonNull Integer fileSize;
+    public final @NonNull Integer imageOffset;
+    public final @NonNull Integer dibSize;
+    public final @NonNull Integer width;
+    public final @NonNull Integer height;
+    public final @NonNull Integer horizontalResolution;
+    public final @NonNull Integer verticalResolution;
 
-    protected final @NotNull ByteBuffer byteBuffer;
+    protected final @NonNull ByteBuffer byteBuffer;
 
     /**
      * Represents a BMP file and makes sure it is valid.
      * Gives you access to the header metadata and image data.
      * @throws BmpFileException
      */
-    protected BmpFile(@NotNull byte[] raw) {
+    protected BmpFile(@NonNull byte[] raw) {
         byteBuffer = ByteBuffer.wrap(raw);
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -61,22 +61,22 @@ public class BmpFile {
             expectedRgbBytes, actualRgbBytes);
     }
 
-    private void expect(@NotNull BmpFileField field) {
-        validate(field.value, accept(field), "Expected value 0x%02X at for field %s (at offset 0x%02X)", field.value, field, field.offset());
+    private void expect(@NonNull BmpFileField field) {
+        validate(field.value, accept(field), "Expected value 0x%02X at for field %s (at offset 0x%02X)", field.value, field, field.getOffset());
     }
 
-    private void validate(@NotNull Integer expected, @NotNull Integer actual, @NotNull String format, Object... args) {
+    private void validate(@NonNull Integer expected, @NonNull Integer actual, @NonNull String format, Object... args) {
         if (!expected.equals(actual)) {
             throw new BmpFileException(format, args);
         }
     }
 
-    private @NotNull Integer accept(@NotNull BmpFileField field) {
+    private @NonNull Integer accept(@NonNull BmpFileField field) {
         try {
             return switch (field.size) {
-                case _1 -> (int) byteBuffer.get(field.offset());
-                case _2 -> (int) byteBuffer.getShort(field.offset());
-                case _4 -> (int) byteBuffer.getInt(field.offset());
+                case _1 -> (int) byteBuffer.get(field.getOffset());
+                case _2 -> (int) byteBuffer.getShort(field.getOffset());
+                case _4 -> (int) byteBuffer.getInt(field.getOffset());
             };
         } catch (IndexOutOfBoundsException e) {
             throw new BmpFileException(e); 
@@ -87,7 +87,7 @@ public class BmpFile {
      * Get zero indexed image data
      * @throws IndexOutOfBoundsException
      */
-    public byte getImageData(@NotNull Integer index) {
+    public byte getImageData(@NonNull Integer index) {
         return byteBuffer.get(imageOffset + index);
     }
 }

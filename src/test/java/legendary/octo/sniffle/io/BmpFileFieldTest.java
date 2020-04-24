@@ -10,17 +10,17 @@ public class BmpFileFieldTest {
 
     @Test
     public void testOffsetFirst() {
-        assertEquals(0x00, MAGIC_NUMBER_B.offset());
+        assertEquals(0x00, MAGIC_NUMBER_B.getOffset());
     }
 
     @Test
     public void testOffsetSomewhere() {
-        assertEquals(0x1C, COLOR_DEPTH.offset());
+        assertEquals(0x1C, COLOR_DEPTH.getOffset());
     }
 
     @Test
     public void testOffsetLast() {
-        assertEquals(0x32, RSVD4.offset());
+        assertEquals(0x32, RSVD4.getOffset());
     }
 
     @Test

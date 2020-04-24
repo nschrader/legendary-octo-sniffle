@@ -1,6 +1,6 @@
 package legendary.octo.sniffle.io;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 /**
  * Problem linked to BMP file format
@@ -8,11 +8,11 @@ import org.jetbrains.annotations.NotNull;
 public class BmpFileException extends RuntimeException {
     private static final long serialVersionUID = 8393273887831143841L;
 
-    public BmpFileException(@NotNull IndexOutOfBoundsException exception) {
+    public BmpFileException(@NonNull IndexOutOfBoundsException exception) {
         super(exception);
     }
 
-    public BmpFileException(@NotNull String format, @NotNull Object... args) {
+    public BmpFileException(@NonNull String format, @NonNull Object... args) {
         super(String.format(format, args));
     }
 }

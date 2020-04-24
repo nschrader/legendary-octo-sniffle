@@ -1,14 +1,16 @@
 package legendary.octo.sniffle.io;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 
-public final class BmpFileIO {
+@UtilityClass
+public class BmpFileIO {
     /**
      * Read BMP file from disk
      * @throws BmpFileException
      * @throws FileException
      */
-    public static @NotNull BmpFile read(@NotNull String path) {
+    public @NonNull BmpFile read(@NonNull String path) {
         return new BmpFile(FileIO.read(path));
     }
 
@@ -17,7 +19,7 @@ public final class BmpFileIO {
      * @throws BmpFileException
      * @throws FileException
      */
-    public static void write(@NotNull String path, @NotNull BmpFile bmpFile) {
+    public void write(@NonNull String path, @NonNull BmpFile bmpFile) {
         FileIO.write(path, bmpFile.byteBuffer.array());
     }
 }

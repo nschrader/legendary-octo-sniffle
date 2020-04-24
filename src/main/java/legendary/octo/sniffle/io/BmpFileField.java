@@ -2,8 +2,8 @@ package legendary.octo.sniffle.io;
 
 import java.util.Arrays;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import lombok.Getter;
+import lombok.NonNull;
 
 import static legendary.octo.sniffle.io.BmpFileFieldSize.*;
 
@@ -34,28 +34,25 @@ enum BmpFileField {
 
     // 4. Image data
 
-    public final @NotNull BmpFileFieldSize size;
-    public final @Nullable Integer value;
+    public final @NonNull BmpFileFieldSize size;
+    public final Integer value;
 
-    private @Nullable Integer offset;
+    @Getter(lazy = true)
+    private final @NonNull Integer offset = offset();
 
-    BmpFileField(@NotNull BmpFileFieldSize size, @Nullable Integer value) {
+    BmpFileField(@NonNull BmpFileFieldSize size, Integer value) {
         this.size = size;
         this.value = value;
     }
 
-    BmpFileField(@NotNull BmpFileFieldSize size) {
+    BmpFileField(@NonNull BmpFileFieldSize size) {
         this(size, null);
     }
 
-    public @NotNull Integer offset() {
-        if (offset == null) {
-            offset = Arrays.stream(values())
-                .limit(ordinal())
-                .map((f) -> f.size.val())
-                .reduce(0, Integer::sum);
-        }
-        
-        return offset;
+    private @NonNull Integer offset() {
+        return Arrays.stream(values())
+            .limit(ordinal())
+            .map((f) -> f.size.val())
+            .reduce(0, Integer::sum);
     }
 }

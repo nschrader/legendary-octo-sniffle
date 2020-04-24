@@ -7,13 +7,14 @@ import java.nio.file.Path;
 
 import com.google.common.io.Resources;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import lombok.NonNull;
+
 public class BmpFileIOTest {
-    private final @NotNull String ok = Resources.getResource("ok.bmp").getPath();
-    private final @NotNull String _32b = Resources.getResource("32b.bmp").getPath();
+    private final @NonNull String ok = Resources.getResource("ok.bmp").getPath();
+    private final @NonNull String _32b = Resources.getResource("32b.bmp").getPath();
 
     @Test
     public void readOk() {
