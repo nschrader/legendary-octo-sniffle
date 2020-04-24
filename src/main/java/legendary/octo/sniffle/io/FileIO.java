@@ -11,6 +11,10 @@ public final class FileIO {
     public static final @NotNull Integer MiB = 2 << 20;
     public static final @NotNull Integer MAX_BYTES = 10 * MiB;
 
+    /**
+     * Read a file from disk to memory. It mustn't exceed {@link #MAX_BYTES}.
+     * @throws FileException
+     */
     public static @NotNull byte[] read(@NotNull String path) {
         try {
             var source = Files.asByteSource(new File(path));
@@ -24,6 +28,10 @@ public final class FileIO {
         }
     }
 
+    /**
+     * Write from memory to file.
+     * @throws FileException
+     */
     public static void write(@NotNull String path, @NotNull byte[] file) {
         try {
             var sink = Files.asByteSink(new File(path));

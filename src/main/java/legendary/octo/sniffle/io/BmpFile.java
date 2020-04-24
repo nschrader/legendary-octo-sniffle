@@ -20,29 +20,30 @@ public class BmpFile {
 
     protected final @NotNull ByteBuffer byteBuffer;
 
+    /**
+     * Represents a BMP file and makes sure it is valid.
+     * Gives you access to the header metadata and image data.
+     * @throws BmpFileException
+     */
     protected BmpFile(@NotNull byte[] raw) {
         byteBuffer = ByteBuffer.wrap(raw);
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
 
-        try {
-            expect(MAGIC_NUMBER_B);
-            expect(MAGIC_NUMBER_M);
+        expect(MAGIC_NUMBER_B);
+        expect(MAGIC_NUMBER_M);
 
-            fileSize = accept(FILE_SIZE);
-            imageOffset = accept(IMAGE_OFFSET);
-            dibSize = accept(DIB_SIZE);
-            width = accept(IMAGE_WIDTH);
-            height = accept(IMAGE_HEIGHT);
+        fileSize = accept(FILE_SIZE);
+        imageOffset = accept(IMAGE_OFFSET);
+        dibSize = accept(DIB_SIZE);
+        width = accept(IMAGE_WIDTH);
+        height = accept(IMAGE_HEIGHT);
 
-            expect(COLOR_PLANES);
-            expect(COLOR_DEPTH);
-            expect(COMPRESSION);
+        expect(COLOR_PLANES);
+        expect(COLOR_DEPTH);
+        expect(COMPRESSION);
 
-            horizontalResolution = accept(HORIZONTAL_RES);
-            verticalResolution = accept(VERTICAL_RES);
-        } catch (IndexOutOfBoundsException e) {
-            throw new BmpFileException(e); 
-        }
+        horizontalResolution = accept(HORIZONTAL_RES);
+        verticalResolution = accept(VERTICAL_RES);
 
         validate(fileSize, raw.length, 
             "File size (%d bytes) does not correspond to what the BMP header (%d bytes) indicates",
@@ -71,13 +72,21 @@ public class BmpFile {
     }
 
     private @NotNull Integer accept(@NotNull BmpFileField field) {
-        return switch (field.size) {
-            case _1 -> (int) byteBuffer.get(field.offset());
-            case _2 -> (int) byteBuffer.getShort(field.offset());
-            case _4 -> (int) byteBuffer.getInt(field.offset());
-        };
+        try {
+            return switch (field.size) {
+                case _1 -> (int) byteBuffer.get(field.offset());
+                case _2 -> (int) byteBuffer.getShort(field.offset());
+                case _4 -> (int) byteBuffer.getInt(field.offset());
+            };
+        } catch (IndexOutOfBoundsException e) {
+            throw new BmpFileException(e); 
+        }
     }
 
+    /**
+     * Get zero indexed image data
+     * @throws IndexOutOfBoundsException
+     */
     public byte getImageData(@NotNull Integer index) {
         return byteBuffer.get(imageOffset + index);
     }

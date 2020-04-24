@@ -4,6 +4,9 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Basically an unchecked IO exception
+ */
 public class FileException extends RuntimeException {
     private static final long serialVersionUID = 8320187812296753533L;
 
