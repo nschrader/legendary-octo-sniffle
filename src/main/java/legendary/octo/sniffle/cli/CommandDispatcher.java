@@ -7,9 +7,9 @@ import com.google.inject.Inject;
 import legendary.octo.sniffle.core.ECipher;
 import legendary.octo.sniffle.core.EMode;
 import legendary.octo.sniffle.core.EStegano;
+import legendary.octo.sniffle.core.IBmpFileIO;
 import legendary.octo.sniffle.core.ICipher;
-import legendary.octo.sniffle.io.BmpFileIO;
-import legendary.octo.sniffle.io.FileIO;
+import legendary.octo.sniffle.core.IFileIO;
 import lombok.RequiredArgsConstructor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -19,6 +19,8 @@ import picocli.CommandLine.Option;
 public class CommandDispatcher {
     private final SteganoResolver steganoResolver;
     private final ICipher cipherImpl;
+    private final IFileIO fileIOImpl;
+    private final IBmpFileIO BmpFileIOImpl;
 
     @Command(name = "-embed")
     void embed(@Option(names = "-in", required = true) File inFile,
@@ -29,11 +31,11 @@ public class CommandDispatcher {
                @Option(names = "-m") EMode mode,
                @Option(names = "-pass") String password) {
         var steganoImpl = steganoResolver.getSteganoFor(steganography);
-        var in = FileIO.read(inFile.getAbsolutePath());
-        var bitmap = BmpFileIO.read(bitmapFile.getAbsolutePath());
+        var in = fileIOImpl.read(inFile);
+        var bitmap = BmpFileIOImpl.read(bitmapFile);
         cipherImpl.encrypt(in, "password", ECipher.aes128, EMode.cbc); //TODO: Default?
         steganoImpl.conceal(in, bitmap);    
-        BmpFileIO.write(outFile.getAbsolutePath(), bitmap);
+        BmpFileIOImpl.write(outFile, bitmap);
     }
 
     @Command(name = "-extract")
@@ -44,9 +46,9 @@ public class CommandDispatcher {
                  @Option(names = "-m") EMode mode,
                  @Option(names = "-pass") String password) {
         var steganoImpl = steganoResolver.getSteganoFor(steganography);
-        var bitmap = BmpFileIO.read(bitmapFile.getAbsolutePath());
+        var bitmap = BmpFileIOImpl.read(bitmapFile);
         var out = steganoImpl.reveal(bitmap);
         cipherImpl.decrypt(out, "password", ECipher.aes128, EMode.cbc); //TODO: Default?
-        FileIO.write(outFile.getAbsolutePath(), out);
+        fileIOImpl.write(outFile, out);
     }
 }

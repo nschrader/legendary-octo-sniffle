@@ -1,25 +1,25 @@
 package legendary.octo.sniffle.io;
 
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
+import java.io.File;
 
-@UtilityClass
-public class BmpFileIO {
-    /**
-     * Read BMP file from disk
-     * @throws BmpFileException
-     * @throws FileException
-     */
-    public @NonNull BmpFile read(@NonNull String path) {
-        return new BmpFile(FileIO.read(path));
+import com.google.inject.Inject;
+
+import legendary.octo.sniffle.core.IBmpFileIO;
+import legendary.octo.sniffle.core.IFileIO;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor(onConstructor_ = @Inject)
+public class BmpFileIO implements IBmpFileIO {
+    private final IFileIO fileIOImpl;
+
+    @Override
+    public @NonNull BmpFile read(@NonNull File file) {
+        return new BmpFile(fileIOImpl.read(file));
     }
 
-    /**
-     * Write BMP file to disk
-     * @throws BmpFileException
-     * @throws FileException
-     */
-    public void write(@NonNull String path, @NonNull BmpFile bmpFile) {
-        FileIO.write(path, bmpFile.byteBuffer.array());
+    @Override
+    public void write(@NonNull File file, @NonNull BmpFile bmpFile) {
+        fileIOImpl.write(file, bmpFile.byteBuffer.array());
     }
 }
