@@ -1,17 +1,17 @@
 package legendary.octo.sniffle.stegano;
 
+import legendary.octo.sniffle.core.IBmpFile;
 import legendary.octo.sniffle.core.IStegano;
-import legendary.octo.sniffle.io.BmpFile;
 import lombok.NonNull;
 
 public class LSB1Impl implements IStegano {
 
     @Override
-    public void conceal(@NonNull byte[] in, @NonNull BmpFile bitmap) {
+    public void conceal(@NonNull byte[] in, @NonNull IBmpFile bitmap) {
     }
 
     @Override
-    public @NonNull byte[] reveal(@NonNull BmpFile bitmap) {
+    public @NonNull byte[] reveal(@NonNull IBmpFile bitmap) {
         return new byte[0];
     }
 }

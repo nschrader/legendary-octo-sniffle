@@ -24,10 +24,10 @@ public class BmpFileTest {
     @Test
     public void testOk() {
         var file = new BmpFile(load("ok.bmp"));
-        assertEquals(4, file.width);
-        assertEquals(5, file.height);
-        assertEquals(2835, file.horizontalResolution);
-        assertEquals(2835, file.verticalResolution);
+        assertEquals(4, file.getWidth());
+        assertEquals(5, file.getHeight());
+        assertEquals(2835, file.getHorizontalResolution());
+        assertEquals(2835, file.getVerticalResolution());
     }
 
     @Test

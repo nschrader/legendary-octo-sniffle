@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.google.inject.Inject;
 
+import legendary.octo.sniffle.core.IBmpFile;
 import legendary.octo.sniffle.core.IBmpFileIO;
 import legendary.octo.sniffle.core.IFileIO;
 import lombok.NonNull;
@@ -14,12 +15,12 @@ public class BmpFileIO implements IBmpFileIO {
     private final IFileIO fileIOImpl;
 
     @Override
-    public @NonNull BmpFile read(@NonNull File file) {
+    public @NonNull IBmpFile read(@NonNull File file) {
         return new BmpFile(fileIOImpl.read(file));
     }
 
     @Override
-    public void write(@NonNull File file, @NonNull BmpFile bmpFile) {
-        fileIOImpl.write(file, bmpFile.byteBuffer.array());
+    public void write(@NonNull File file, @NonNull IBmpFile bmpFile) {
+        fileIOImpl.write(file, bmpFile.getBytes());
     }
 }

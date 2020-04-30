@@ -30,6 +30,6 @@ public class BmpFileFieldTest {
 
     @Test
     public void testSize() {
-        assertEquals(4, FILE_SIZE.size.val());
+        assertEquals(4, FILE_SIZE.size.getValue());
     }
 }

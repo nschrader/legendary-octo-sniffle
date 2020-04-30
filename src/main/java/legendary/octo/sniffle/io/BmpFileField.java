@@ -52,7 +52,7 @@ enum BmpFileField {
     private @NonNull Integer offset() {
         return Arrays.stream(values())
             .limit(ordinal())
-            .map((f) -> f.size.val())
+            .map((f) -> f.size.getValue())
             .reduce(0, Integer::sum);
     }
 }

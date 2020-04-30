@@ -5,24 +5,38 @@ import static legendary.octo.sniffle.io.BmpFileField.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import legendary.octo.sniffle.core.IBmpFile;
+import lombok.Getter;
 import lombok.NonNull;
 
-public class BmpFile {
+public class BmpFile implements IBmpFile {
     public static final @NonNull Integer HEADER_BYTES = 14;
 
-    public final @NonNull Integer fileSize;
-    public final @NonNull Integer imageOffset;
-    public final @NonNull Integer dibSize;
-    public final @NonNull Integer width;
-    public final @NonNull Integer height;
-    public final @NonNull Integer horizontalResolution;
-    public final @NonNull Integer verticalResolution;
+    private final @NonNull ByteBuffer byteBuffer;
 
-    protected final @NonNull ByteBuffer byteBuffer;
+    @Getter(onMethod_ = @Override)
+    private final @NonNull Integer fileSize;
+
+    @Getter(onMethod_ = @Override)
+    private final @NonNull Integer imageOffset;
+
+    @Getter(onMethod_ = @Override)
+    private final @NonNull Integer dibSize;
+
+    @Getter(onMethod_ = @Override)
+    private final @NonNull Integer width;
+
+    @Getter(onMethod_ = @Override)
+    private final @NonNull Integer height;
+
+    @Getter(onMethod_ = @Override)
+    private final @NonNull Integer horizontalResolution;
+
+    @Getter(onMethod_ = @Override)
+    private final @NonNull Integer verticalResolution;
 
     /**
      * Represents a BMP file and makes sure it is valid.
-     * Gives you access to the header metadata and image data.
      * @throws BmpFileException
      */
     protected BmpFile(@NonNull byte[] raw) {
@@ -87,7 +101,13 @@ public class BmpFile {
      * Get zero indexed image data
      * @throws IndexOutOfBoundsException
      */
-    public byte getImageData(@NonNull Integer index) {
+    @Override
+    public @NonNull byte getImageData(@NonNull Integer index) {
         return byteBuffer.get(imageOffset + index);
+    }
+
+    @Override
+    public @NonNull byte[] getBytes() {
+        return byteBuffer.array();
     }
 }
