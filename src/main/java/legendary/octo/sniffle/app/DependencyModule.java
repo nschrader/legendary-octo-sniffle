@@ -17,7 +17,7 @@ import legendary.octo.sniffle.stegano.LSB1Impl;
 import legendary.octo.sniffle.stegano.LSB2Impl;
 import legendary.octo.sniffle.stegano.LSBIImpl;
 
-public class AppModule extends AbstractModule {
+public class DependencyModule extends AbstractModule {
 
     @Override
     protected void configure() {
