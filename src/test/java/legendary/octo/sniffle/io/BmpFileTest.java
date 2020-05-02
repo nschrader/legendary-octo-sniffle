@@ -4,23 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.IOException;
-
 import com.google.common.io.Resources;
 
 import org.junit.jupiter.api.Test;
 
-import lombok.NonNull;
 import lombok.SneakyThrows;
 
 public class BmpFileTest {
-    private @NonNull byte[] load(@NonNull String path) {
-        try {
-            return Resources.toByteArray(Resources.getResource(path));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Test
     @SneakyThrows

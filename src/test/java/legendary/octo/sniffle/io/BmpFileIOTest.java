@@ -12,26 +12,37 @@ import java.nio.file.Path;
 
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.testing.fieldbinder.Bind;
+import com.google.inject.testing.fieldbinder.BoundFieldModule;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import legendary.octo.sniffle.core.IBmpFile;
 import legendary.octo.sniffle.core.IFileIO;
 import lombok.SneakyThrows;
 
+@ExtendWith(MockitoExtension.class)
 public class BmpFileIOTest {
     private final File ok = new File(Resources.getResource("ok.bmp").getPath());
     private final File _32b = new File(Resources.getResource("32b.bmp").getPath());
 
+    @Bind
+    @Mock
     private IFileIO fileIO;
+
+    @Inject
     private BmpFileIO bmpFileIO;
 
     @BeforeEach
     public void setUp() {
-        fileIO = mock(IFileIO.class);
-        bmpFileIO = new BmpFileIO(fileIO);
+        Guice.createInjector(BoundFieldModule.of(this)).injectMembers(this);
     }
 
     @Test
