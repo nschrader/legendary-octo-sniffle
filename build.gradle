@@ -10,17 +10,20 @@ repositories {
 
 dependencies {
     implementation 'com.google.guava:guava:28.2-jre'
+
+    // Guice
     implementation 'com.google.inject:guice:4.2.3'
+    testImplementation 'com.google.inject.extensions:guice-testlib:4.2.3'
 
     // Picocli
     implementation 'info.picocli:picocli:4.2.0'
     annotationProcessor 'info.picocli:picocli-codegen:4.2.0'
 
-    // Junit
+    // Junit & Mockito
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
-
-    testImplementation "org.mockito:mockito-core:2.+"
+    testImplementation 'org.mockito:mockito-core:2.+'
+    testImplementation 'org.mockito:mockito-junit-jupiter:2.+'
 }
 
 compileJava   {
@@ -37,4 +40,8 @@ application {
 
 test {
     useJUnitPlatform()
+    testLogging.showStandardStreams = true
+
+    // Guice
+    jvmArgs = ['--add-opens', 'java.base/java.lang=ALL-UNNAMED']
 }

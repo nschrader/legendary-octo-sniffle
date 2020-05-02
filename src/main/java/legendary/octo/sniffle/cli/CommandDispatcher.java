@@ -27,13 +27,17 @@ public class CommandDispatcher {
                @Option(names = "-p", required = true) File bitmapFile,
                @Option(names = "-out", required = true) File outFile,
                @Option(names = "-steg", required = true) EStegano steganography,
-               @Option(names = "-a") ECipher cipher,
-               @Option(names = "-m") EMode mode,
+               @Option(names = "-a", defaultValue = "aes128") ECipher cipher,
+               @Option(names = "-m", defaultValue = "cbc") EMode mode,
                @Option(names = "-pass") String password) {
         var steganoImpl = steganoResolver.getSteganoFor(steganography);
         var in = fileIOImpl.read(inFile);
         var bitmap = BmpFileIOImpl.read(bitmapFile);
-        cipherImpl.encrypt(in, "password", ECipher.aes128, EMode.cbc); //TODO: Default?
+
+        if (password != null) {
+            cipherImpl.encrypt(in, password, cipher, mode);
+        }
+        
         steganoImpl.conceal(in, bitmap);    
         BmpFileIOImpl.write(outFile, bitmap);
     }
@@ -42,13 +46,17 @@ public class CommandDispatcher {
     void extract(@Option(names = "-p", required = true) File bitmapFile,
                  @Option(names = "-out", required = true) File outFile,
                  @Option(names = "-steg", required = true) EStegano steganography,
-                 @Option(names = "-a") ECipher cipher,
-                 @Option(names = "-m") EMode mode,
+                 @Option(names = "-a", defaultValue = "aes128") ECipher cipher,
+                 @Option(names = "-m", defaultValue = "cbc") EMode mode,
                  @Option(names = "-pass") String password) {
         var steganoImpl = steganoResolver.getSteganoFor(steganography);
         var bitmap = BmpFileIOImpl.read(bitmapFile);
         var out = steganoImpl.reveal(bitmap);
-        cipherImpl.decrypt(out, "password", ECipher.aes128, EMode.cbc); //TODO: Default?
+
+        if (password != null) {
+            cipherImpl.decrypt(out, password, cipher, mode);
+        }
+
         fileIOImpl.write(outFile, out);
     }
 }
