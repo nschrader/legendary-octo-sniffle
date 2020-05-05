@@ -1,4 +1,4 @@
-package legendary.octo.sniffle.io;
+package legendary.octo.sniffle.error;
 
 import lombok.NonNull;
 

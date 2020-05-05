@@ -18,6 +18,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import legendary.octo.sniffle.error.FileException;
+
 public class FileIOTest {
     private final File root = new File("/");
 

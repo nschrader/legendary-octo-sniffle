@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.google.common.io.Files;
 
 import legendary.octo.sniffle.core.IFileIO;
+import legendary.octo.sniffle.error.FileException;
 import lombok.NonNull;
 
 public class FileIO implements IFileIO {

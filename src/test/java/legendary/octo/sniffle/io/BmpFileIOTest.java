@@ -26,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import legendary.octo.sniffle.core.IBmpFile;
 import legendary.octo.sniffle.core.IFileIO;
+import legendary.octo.sniffle.error.BmpFileException;
 import lombok.SneakyThrows;
 
 @ExtendWith(MockitoExtension.class)

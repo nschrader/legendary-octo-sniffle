@@ -8,6 +8,7 @@ import com.google.common.io.Resources;
 
 import org.junit.jupiter.api.Test;
 
+import legendary.octo.sniffle.error.BmpFileException;
 import lombok.SneakyThrows;
 
 public class BmpFileTest {

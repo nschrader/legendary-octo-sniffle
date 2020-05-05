@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import legendary.octo.sniffle.core.IBmpFile;
+import legendary.octo.sniffle.error.BmpFileException;
 import lombok.Getter;
 import lombok.NonNull;
 
