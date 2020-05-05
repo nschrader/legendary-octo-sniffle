@@ -13,7 +13,12 @@ import legendary.octo.sniffle.core.ECipher;
 import legendary.octo.sniffle.core.EMode;
 import legendary.octo.sniffle.error.SteganoException;
 
-public class CommandDispatcherEmbedTest extends ACommandDispatcherTest {
+public class CommandDispatcherEmbedTest extends ACommandDispatcherBaseTest {
+
+    @Test
+    public void testEmbedHelp() {
+        executeCommandLineAndAssert(SUCCESS, "-embed", "-help");
+    }
 
     @Test
     public void testEmbedDefault() {

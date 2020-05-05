@@ -26,7 +26,7 @@ import lombok.NonNull;
 import picocli.CommandLine;
 
 @ExtendWith(MockitoExtension.class)
-public abstract class ACommandDispatcherTest {
+public abstract class ACommandDispatcherBaseTest {
 
     @Bind
     @Mock
@@ -76,7 +76,7 @@ public abstract class ACommandDispatcherTest {
     protected final @NonNull Integer BUSINESS_FAILURE = 1;
     protected final @NonNull Integer USAGE_FAILURE = 2;
 
-    protected void executeCommandLineAndAssert(int expectedExitCode, String... args) {
+    protected void executeCommandLineAndAssert(@NonNull Integer expectedExitCode, String... args) {
         assertEquals(expectedExitCode, new CommandLine(commandDispatcher).execute(args));
     }
 }

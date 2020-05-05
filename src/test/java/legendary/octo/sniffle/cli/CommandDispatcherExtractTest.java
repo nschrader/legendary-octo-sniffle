@@ -14,7 +14,12 @@ import legendary.octo.sniffle.core.EMode;
 import legendary.octo.sniffle.error.SteganoException;
 import picocli.CommandLine;
 
-public class CommandDispatcherExtractTest extends ACommandDispatcherTest {
+public class CommandDispatcherExtractTest extends ACommandDispatcherBaseTest {
+
+    @Test
+    public void testExtractHelp() {
+        executeCommandLineAndAssert(SUCCESS, "-extract", "-help");
+    }
 
     @Test
     public void testExtractDefault() {

@@ -18,7 +18,7 @@ import picocli.CommandLine.Option;
 /**
  * CLI command skeleton using Picocli
  */
-@Command(mixinStandardHelpOptions = true, version = "0.9")
+@Command
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public class CommandDispatcher implements Runnable {
     private final SteganoResolver steganoResolver;
@@ -27,7 +27,7 @@ public class CommandDispatcher implements Runnable {
     private final IBmpFileIO BmpFileIOImpl;
 
     @Command(name = "-embed", showDefaultValues = true)
-    void embed(@Option(names = "-help", usageHelp = true) boolean help,
+    void embed(@Option(names = "-help", usageHelp = true) Boolean help,
                @Option(names = "-in", required = true, paramLabel = "file") File inFile,
                @Option(names = {"-p", "-bitmap"}, required = true, paramLabel = "file") File bitmapFile,
                @Option(names = "-out", required = true, paramLabel = "file") File outFile,
@@ -48,7 +48,7 @@ public class CommandDispatcher implements Runnable {
     }
 
     @Command(name = "-extract")
-    void extract(@Option(names = "-help", usageHelp = true) boolean help,
+    void extract(@Option(names = "-help", usageHelp = true) Boolean help,
                  @Option(names = {"-p", "-bitmap"}, required = true, paramLabel = "file") File bitmapFile,
                  @Option(names = "-out", required = true, paramLabel = "file") File outFile,
                  @Option(names = "-steg", required = true, paramLabel = "method", description = "${COMPLETION-CANDIDATES}") EStegano steganography,
@@ -65,6 +65,9 @@ public class CommandDispatcher implements Runnable {
 
         fileIOImpl.write(outFile, out);
     }
+
+    @Option(names = "-help", usageHelp = true, description = "Display help and exit")
+    public Boolean help;
 
     public void run() { 
         CommandLine.usage(this, System.out);
