@@ -14,12 +14,12 @@ public class App {
     @Inject
     private CommandDispatcher commandDispatcher;
 
-    public void run(String[] args) {
+    public void run(String... args) {
         Guice.createInjector(new SkeletonModule(), new DependencyModule()).injectMembers(this);
         new CommandLine(commandDispatcher).execute(args);
     }
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         new App().run(args);
     }
 }

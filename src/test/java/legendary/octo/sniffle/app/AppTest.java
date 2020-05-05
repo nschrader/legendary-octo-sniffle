@@ -21,9 +21,7 @@ public class AppTest {
         var in = Resources.getResource("32b.bmp").getPath();
         var outFile = dir.resolve("outFile");
 
-        var cmd = String.format("-embed -in %s -p %s -out %s -steg LSB1 -pass foo", in, bitmap, outFile.toString());
-        App.main(cmd.split("\\s+"));
-
+        App.main("-embed", "-in", in, "-p", bitmap, "-out", outFile.toString(), "-steg", "LSB1", "-pass", "foo");
         assertArrayEquals(Resources.toByteArray(Resources.getResource("ok.bmp")), Files.readAllBytes(outFile));
     }
 
@@ -33,9 +31,7 @@ public class AppTest {
         var bitmap = Resources.getResource("ok.bmp").getPath();
         var outFile = dir.resolve("outFile");
 
-        var cmd = String.format("-extract -p %s -out %s -steg LSB1 -pass foo", bitmap, outFile.toString());
-        App.main(cmd.split("\\s+"));
-
+        App.main("-extract", "-p", bitmap, "-out", outFile.toString(), "-steg", "LSB1", "-pass", "foo");
         assertArrayEquals(new byte[0], Files.readAllBytes(outFile));
     }
 }
