@@ -14,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
+/**
+ * CLI command skeleton using Picocli
+ */
 @Command
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public class CommandDispatcher {

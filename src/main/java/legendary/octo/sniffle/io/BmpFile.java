@@ -97,10 +97,6 @@ public class BmpFile implements IBmpFile {
         }
     }
 
-    /**
-     * Get zero indexed image data
-     * @throws IndexOutOfBoundsException
-     */
     @Override
     public @NonNull byte getImageData(@NonNull Integer index) {
         return byteBuffer.get(imageOffset + index);

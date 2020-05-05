@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 public class SteganoResolver {
     private final @NonNull Injector injector;
     
+    /**
+     * Resolve given steganography method to annotated binding
+     */
     public IStegano getSteganoFor(@NonNull EStegano stegano) {
         var key = Key.get(IStegano.class, stegano.named());
         return injector.getInstance(key);

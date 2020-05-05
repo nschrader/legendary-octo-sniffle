@@ -6,6 +6,9 @@ import com.google.inject.Inject;
 import legendary.octo.sniffle.cli.CommandDispatcher;
 import picocli.CommandLine;
 
+/**
+ * Entry point
+ */
 public class App {
 
     @Inject
