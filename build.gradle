@@ -1,7 +1,8 @@
 plugins {
     id 'java'
     id 'application'
-    id "io.freefair.lombok" version "5.0.0"
+    id 'io.freefair.lombok' version '5.0.0'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 repositories {
@@ -40,7 +41,6 @@ application {
 
 test {
     useJUnitPlatform()
-    testLogging.showStandardStreams = true
 
     // Guice
     jvmArgs = ['--add-opens', 'java.base/java.lang=ALL-UNNAMED']
