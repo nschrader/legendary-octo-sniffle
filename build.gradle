@@ -3,6 +3,7 @@ plugins {
     id 'application'
     id 'io.freefair.lombok' version '5.0.0'
     id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'com.adarshr.test-logger' version '2.0.0'
 }
 
 repositories {
@@ -25,6 +26,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
     testImplementation 'org.mockito:mockito-core:2.+'
     testImplementation 'org.mockito:mockito-junit-jupiter:2.+'
+    testImplementation 'com.ginsberg:junit5-system-exit:1.0.0'
 }
 
 compileJava   {

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.ginsberg.junit.exit.ExpectSystemExitWithStatus;
 import com.google.common.io.Resources;
 
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ public class AppTest {
 
     @Test
     @SneakyThrows
+    @ExpectSystemExitWithStatus(0)
     public void testEmbed(@TempDir Path dir) { // TODO: Change to real test vectors
         var bitmap = Resources.getResource("ok.bmp").getPath();
         var in = Resources.getResource("32b.bmp").getPath();
@@ -27,11 +29,18 @@ public class AppTest {
 
     @Test
     @SneakyThrows
+    @ExpectSystemExitWithStatus(0)
     public void testExtract(@TempDir Path dir) { // TODO: Change to real test vectors
         var bitmap = Resources.getResource("ok.bmp").getPath();
         var outFile = dir.resolve("outFile");
 
         App.main("-extract", "-p", bitmap, "-out", outFile.toString(), "-steg", "LSB1", "-pass", "foo");
         assertArrayEquals(new byte[0], Files.readAllBytes(outFile));
+    }
+
+    @Test
+    @ExpectSystemExitWithStatus(2)
+    public void testError() {
+        App.main("-xyz");
     }
 }
