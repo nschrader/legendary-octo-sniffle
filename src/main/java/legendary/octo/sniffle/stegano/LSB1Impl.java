@@ -34,8 +34,7 @@ public class LSB1Impl implements IStegano {
         var whichByte = 0;
         var c = 7;
 
-        var numBits = lengthToHide * 8;
-        for (var y = 0; y < numBits; y++) {
+        for (var y = 0; y < lengthToHide * 8; y++) {
             var component = bitmap.getImageData(y);
             var modifiedComponent = (byte) modifyBit(component, 0, getBitByPosition(toHide.get(whichByte), c));
             bitmap.putImageData(y, modifiedComponent);
@@ -52,19 +51,18 @@ public class LSB1Impl implements IStegano {
         var imageData = bitmap.getImageDataView();
 
         var lsb1Offset = ByteBuffer.allocate(4).order(ByteOrder.BIG_ENDIAN);
-        lsb1Offset.put(getByte(1, imageData));
-        lsb1Offset.put(getByte(1, imageData));
-        lsb1Offset.put(getByte(1, imageData));
-        lsb1Offset.put(getByte(1, imageData));
+        for (var i = 0; i < 4; i++) {
+            lsb1Offset.put(getByte(1, imageData));
+        }
         var max = lsb1Offset.getInt(0);
         
-        byte[] fileBytes = new byte[max];
-        for (var i = 0; i < fileBytes.length; i++) {
+        var fileBytes = new byte[max];
+        for (var i = 0; i < max; i++) {
             fileBytes[i] = getByte(1, imageData);
         }
         
-        boolean notNullChar = false;
-        String extension = "";
+        var notNullChar = false;
+        var extension = "";
         while (!notNullChar) {
             var b = getByte(1, imageData);
             if (b == 0) {
@@ -101,6 +99,6 @@ public class LSB1Impl implements IStegano {
 		for (var i = 0; i < 8 / lsbFactor; i++) {
 			result += extractBits(lsbFactor, imageData.get());
 		}
-		return (byte) Integer.parseInt(result,2);
+		return (byte) Integer.parseInt(result, 2);
 	}
 }
