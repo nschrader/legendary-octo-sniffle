@@ -1,5 +1,7 @@
 package legendary.octo.sniffle.core;
 
+import java.nio.ByteBuffer;
+
 import lombok.NonNull;
 
 /**
@@ -7,18 +9,29 @@ import lombok.NonNull;
  * data.
  */
 public interface IBmpFile {
-    public @NonNull Integer getFileSize();
-    public @NonNull Integer getImageOffset();
-    public @NonNull Integer getDibSize();
-    public @NonNull Integer getWidth();
-    public @NonNull Integer getHeight();
-    public @NonNull Integer getHorizontalResolution();
-    public @NonNull Integer getVerticalResolution();
-    public @NonNull byte[] getBytes();
+    @NonNull Integer getFileSize();
+    @NonNull Integer getImageOffset();
+    @NonNull Integer getDibSize();
+    @NonNull Integer getWidth();
+    @NonNull Integer getHeight();
+    @NonNull Integer getHorizontalResolution();
+    @NonNull Integer getVerticalResolution();
+    @NonNull byte[] getBytes();
 
     /**
      * Get zero indexed image data
      * @throws IndexOutOfBoundsException
      */
-    public @NonNull byte getImageData(@NonNull Integer index);
+    @NonNull byte getImageData(@NonNull Integer index);
+
+    /**
+     * Put zero indexed image data
+     * @throws IndexOutOfBoundsException
+     */
+    void putImageData(@NonNull Integer index, @NonNull Byte data);
+
+    /**
+     * @return A new ByteBuffer of the image data
+     */
+    @NonNull ByteBuffer getImageDataView();
 }
