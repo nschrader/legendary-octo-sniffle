@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -111,7 +112,7 @@ public class CommandDispatcherEmbedTest extends ACommandDispatcherBaseTest {
 
     @Test
     public void testEmbedBusinessException() {
-        doThrow(new SteganoException()).when(lsb1Mock).conceal(any(), any());
+        doThrow(mock(SteganoException.class)).when(lsb1Mock).conceal(any(), any());
         executeCommandLineAndAssert(BUSINESS_FAILURE, "-embed", "-in", "inFile", "-p", "in.bmp", "-out", "out.bmp", "-steg", "LSB1");
         verify(fileIOmock, never()).write(any(), any());
     }

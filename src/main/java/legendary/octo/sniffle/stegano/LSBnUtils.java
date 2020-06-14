@@ -3,8 +3,6 @@ package legendary.octo.sniffle.stegano;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import com.google.common.io.Files;
-
 import legendary.octo.sniffle.core.IBmpFile;
 import legendary.octo.sniffle.error.SteganoException;
 import lombok.NonNull;
@@ -45,9 +43,9 @@ class LSBnUtils {
 
         while (!notNullChar) {
             var b = getByte(lsbFactor, imageData);
-            if (b == 0) {
+            if (b == 0x00) {
                 notNullChar = true;
-            } else {
+            } else if (b != 0x2e) {
                 extension += (char) b;
             }
         }
@@ -71,10 +69,9 @@ class LSBnUtils {
         return bytes;
     }
 
-    @NonNull byte[] prepareFileExtension(@NonNull String path) {
-        var rawExtension = Files.getFileExtension(path);
+    @NonNull byte[] prepareFileExtension(@NonNull String rawExtension) {
         if (rawExtension.isEmpty()) {
-            throw new SteganoException(); //TODO: Add error message
+            throw new SteganoException("No file extension to embed, use a file that has one");
         }
         return ('.' + rawExtension + '\0').getBytes();
     }

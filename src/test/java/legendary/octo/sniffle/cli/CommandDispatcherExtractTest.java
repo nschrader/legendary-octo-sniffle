@@ -3,9 +3,7 @@ package legendary.octo.sniffle.cli;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -109,7 +107,7 @@ public class CommandDispatcherExtractTest extends ACommandDispatcherBaseTest {
 
     @Test
     public void testExtractBusinessException() {
-        doThrow(new SteganoException()).when(lsb1Mock).reveal(any());
+        doThrow(mock(SteganoException.class)).when(lsb1Mock).reveal(any());
         executeCommandLineAndAssert(BUSINESS_FAILURE, "-extract", "-p", "in.bmp", "-out", "outFile", "-steg", "LSB1");
         verify(fileIOmock, never()).write(any(), any());
     }

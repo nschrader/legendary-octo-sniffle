@@ -1,6 +1,7 @@
 package legendary.octo.sniffle.stegano;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.File;
 
 import com.google.common.io.Resources;
@@ -48,7 +49,7 @@ abstract class ALSBIntegrationTest {
         impl.conceal(toHide, carrierBmp);
 
         var expected = bmpFileIO.read(getResource(testVector));
-        assertArrayEquals(expected.getBytes(), carrierBmp.getBytes());
+        assertEquals(expected.getCommonFile(), carrierBmp.getCommonFile());
     }
 
     protected void revealAndCompareAgainstTestVector(
@@ -59,7 +60,7 @@ abstract class ALSBIntegrationTest {
         var result = impl.reveal(carrierBmp);
 
         var expected = fileIO.read(getResource(secret));
-        assertArrayEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     protected void concealAndReveal(
@@ -72,7 +73,7 @@ abstract class ALSBIntegrationTest {
         impl.conceal(toHide, carrierBmp);
         var hidden = impl.reveal(carrierBmp);
 
-        assertArrayEquals(toHide, hidden);
+        assertEquals(toHide, hidden);
     }
 
     protected File getResource(String relativePath) {

@@ -5,13 +5,15 @@ import static legendary.octo.sniffle.io.BmpFileField.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import legendary.octo.sniffle.core.DCommonFile;
 import legendary.octo.sniffle.core.IBmpFile;
 import legendary.octo.sniffle.error.BmpFileException;
 import lombok.Getter;
 import lombok.NonNull;
 
 public class BmpFile implements IBmpFile {
-    public static final @NonNull Integer HEADER_BYTES = 14;
+    private static final @NonNull Integer HEADER_BYTES = 14;
+    private static final @NonNull String DEFAULT_EXTENSION = "bmp";
 
     private final @NonNull ByteBuffer byteBuffer;
 
@@ -40,9 +42,11 @@ public class BmpFile implements IBmpFile {
      * Represents a BMP file and makes sure it is valid.
      * @throws BmpFileException
      */
-    protected BmpFile(@NonNull byte[] raw) {
-        byteBuffer = ByteBuffer.wrap(raw);
-        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+    protected BmpFile(@NonNull DCommonFile content) {
+        var raw = content.getBytes();
+        byteBuffer = ByteBuffer.allocate(raw.length)
+            .put(raw)
+            .order(ByteOrder.LITTLE_ENDIAN);
 
         expect(MAGIC_NUMBER_B);
         expect(MAGIC_NUMBER_M);
@@ -116,7 +120,7 @@ public class BmpFile implements IBmpFile {
     }
 
     @Override
-    public @NonNull byte[] getBytes() {
-        return byteBuffer.array();
+    public @NonNull DCommonFile getCommonFile() {
+        return new DCommonFile(DEFAULT_EXTENSION, byteBuffer.array());
     }
 }

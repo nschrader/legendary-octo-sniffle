@@ -39,8 +39,9 @@ public class CommandDispatcher implements Runnable {
         var in = fileIOImpl.read(inFile);
         var bitmap = BmpFileIOImpl.read(bitmapFile);
 
+        //TODO: Fix
         if (password != null) {
-            cipherImpl.encrypt(in, password, cipher, mode);
+            cipherImpl.encrypt(new byte[1], password, cipher, mode);
         }
         
         steganoImpl.conceal(in, bitmap);    
@@ -59,8 +60,9 @@ public class CommandDispatcher implements Runnable {
         var bitmap = BmpFileIOImpl.read(bitmapFile);
         var out = steganoImpl.reveal(bitmap);
 
+        //TODO: Fix
         if (password != null) {
-            cipherImpl.decrypt(out, password, cipher, mode);
+            cipherImpl.decrypt(new byte[1], password, cipher, mode);
         }
 
         fileIOImpl.write(outFile, out);

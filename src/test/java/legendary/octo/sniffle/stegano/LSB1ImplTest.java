@@ -1,6 +1,5 @@
 package legendary.octo.sniffle.stegano;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -12,6 +11,7 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
+import legendary.octo.sniffle.core.DCommonFile;
 import legendary.octo.sniffle.core.IBmpFile;
 
 public class LSB1ImplTest {
@@ -35,7 +35,7 @@ public class LSB1ImplTest {
         doAnswer(i -> bm[i.getArgument(0, Integer.class)]).when(bitmap).getImageData(any());
         doAnswer(i -> bm[i.getArgument(0, Integer.class)] = i.getArgument(1, Byte.class)).when(bitmap).putImageData(any(), any());
 
-        new LSB1Impl().conceal(in, bitmap);
+        new LSB1Impl().conceal(new DCommonFile("x", in), bitmap);
 
         //TODO: Test size field
         for (var i = 0; i < IN_LEN * LSB1_FACTOR; i++) {
@@ -79,8 +79,7 @@ public class LSB1ImplTest {
         Arrays.fill(expectedOut, (byte) 0xFF);
 
         var out = new LSB1Impl().reveal(bitmap);
-        assertArrayEquals(expectedOut, out);
-        //TODO: test extension
+        assertEquals(new DCommonFile("x", expectedOut), out);
     }
     
 }

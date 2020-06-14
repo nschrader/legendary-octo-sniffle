@@ -21,6 +21,6 @@ public class BmpFileIO implements IBmpFileIO {
 
     @Override
     public void write(@NonNull File file, @NonNull IBmpFile bmpFile) {
-        fileIOImpl.write(file, bmpFile.getBytes());
+        fileIOImpl.write(file, bmpFile.getCommonFile());
     }
 }

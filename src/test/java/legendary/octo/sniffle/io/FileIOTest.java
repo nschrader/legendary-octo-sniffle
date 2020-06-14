@@ -1,6 +1,7 @@
 package legendary.octo.sniffle.io;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -18,10 +19,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import legendary.octo.sniffle.core.DCommonFile;
 import legendary.octo.sniffle.error.FileException;
 
 public class FileIOTest {
     private final File root = new File("/");
+    private final DCommonFile simpleData = new DCommonFile("x", new byte[] {0x13});
 
     @Inject
     private FileIO fileIO;
@@ -33,10 +36,9 @@ public class FileIOTest {
 
     @Test
     public void read(@TempDir Path dir) throws IOException {
-        var data = new byte[] {0x13};
-        var f = dir.resolve("file").toFile();
-        Files.asByteSink(f).write(data);
-        assertArrayEquals(data, fileIO.read(f));
+        var f = dir.resolve("file.x").toFile();
+        Files.asByteSink(f).write(simpleData.getBytes());
+        assertEquals(simpleData, fileIO.read(f));
     }
 
     @Test
@@ -58,14 +60,14 @@ public class FileIOTest {
 
     @Test
     public void write(@TempDir Path dir) throws IOException {
-        var data = new byte[] {0x13};
         var f = dir.resolve("file").toFile();
-        fileIO.write(f, data);
-        assertArrayEquals(data, Files.asByteSource(f).read());
+        fileIO.write(f, simpleData);
+        assertArrayEquals(simpleData.getBytes(), Files.asByteSource(f).read());
     }
 
     @Test
     public void writeInvalidPath() {
-        assertThrows(FileException.class, () ->  fileIO.write(root, new byte[1]));
+        var data = new DCommonFile(".x", new byte[1]);
+        assertThrows(FileException.class, () ->  fileIO.write(root, data));
     }
 }

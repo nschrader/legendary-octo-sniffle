@@ -16,7 +16,7 @@ public interface IBmpFile {
     @NonNull Integer getHeight();
     @NonNull Integer getHorizontalResolution();
     @NonNull Integer getVerticalResolution();
-    @NonNull byte[] getBytes();
+    @NonNull DCommonFile getCommonFile();
 
     /**
      * Get zero indexed image data

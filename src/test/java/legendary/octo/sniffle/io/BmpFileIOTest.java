@@ -1,5 +1,6 @@
 package legendary.octo.sniffle.io;
 
+import static legendary.octo.sniffle.io.IOTestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -10,7 +11,6 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.nio.file.Path;
 
-import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -49,7 +49,7 @@ public class BmpFileIOTest {
     @Test
     @SneakyThrows
     public void readOk() {
-        when(fileIO.read(ok)).thenReturn(Files.toByteArray(ok));
+        when(fileIO.read(ok)).thenReturn(getCommonFile(ok));
         assertNotNull(bmpFileIO.read(ok));
         verify(fileIO).read(ok);
     }
@@ -57,7 +57,7 @@ public class BmpFileIOTest {
     @Test
     @SneakyThrows
     public void readInvalid() {
-        when(fileIO.read(_32b)).thenReturn(Files.toByteArray(_32b));
+        when(fileIO.read(_32b)).thenReturn(getCommonFile(_32b));
         assertThrows(BmpFileException.class, () -> bmpFileIO.read(_32b));
     }
 
@@ -65,7 +65,7 @@ public class BmpFileIOTest {
     @SneakyThrows
     public void writeOk(@TempDir Path dir) {
         var bmpFile = mock(IBmpFile.class);
-        when(bmpFile.getBytes()).thenReturn(Files.toByteArray(ok));
+        when(bmpFile.getCommonFile()).thenReturn(getCommonFile(ok));
         bmpFileIO.write(dir.resolve("test.bmp").toFile(), bmpFile);
         verify(fileIO).write(any(), any());
     }
