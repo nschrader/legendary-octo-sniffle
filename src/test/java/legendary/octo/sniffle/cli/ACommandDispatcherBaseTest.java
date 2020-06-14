@@ -26,7 +26,7 @@ import lombok.NonNull;
 import picocli.CommandLine;
 
 @ExtendWith(MockitoExtension.class)
-public abstract class ACommandDispatcherBaseTest {
+abstract class ACommandDispatcherBaseTest {
 
     @Bind
     @Mock
