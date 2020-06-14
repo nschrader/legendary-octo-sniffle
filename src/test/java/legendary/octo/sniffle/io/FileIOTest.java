@@ -50,7 +50,7 @@ public class FileIOTest {
     public void readTooBig(@TempDir Path dir) throws IOException {
         var f = dir.resolve("big").toFile();
         try (var raf = new RandomAccessFile(f, "rw")) {
-            raf.setLength(11 * FileIO.MiB);
+            raf.setLength(51 * FileIO.MiB);
             assertTrue(
                 assertThrows(FileException.class, () -> fileIO.read(f))
                     .getMessage()
