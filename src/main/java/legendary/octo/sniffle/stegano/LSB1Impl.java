@@ -1,104 +1,30 @@
 package legendary.octo.sniffle.stegano;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
-import com.google.common.io.Files;
+import static legendary.octo.sniffle.stegano.LSBnUtils.*;
 
 import legendary.octo.sniffle.core.IBmpFile;
 import legendary.octo.sniffle.core.IStegano;
-import legendary.octo.sniffle.error.SteganoException;
 import lombok.NonNull;
 
 public class LSB1Impl implements IStegano {
 
     @Override
     public void conceal(@NonNull byte[] in, @NonNull IBmpFile bitmap) {
-        final var OFFSET_LEN = 4;
-
         //TODO: Get filename from somewhere
-        var path = "file.png";
-        var rawExtension = Files.getFileExtension(path);
-        if (rawExtension.isEmpty()) {
-            throw new SteganoException(); //TODO: Add error message
-        }
-        var extension = ('.' + rawExtension + '\0').getBytes();
-
-        var lengthToHide = OFFSET_LEN + in.length + extension.length;
-        var toHide = ByteBuffer.allocate(lengthToHide).order(ByteOrder.BIG_ENDIAN);
-
-        toHide.putInt(in.length);
-        toHide.put(in);
-        toHide.put(extension);
-
-        var whichByte = 0;
-        var c = 7;
-
-        for (var y = 0; y < lengthToHide * 8; y++) {
-            var component = bitmap.getImageData(y);
-            var modifiedComponent = (byte) modifyBit(component, 0, getBitByPosition(toHide.get(whichByte), c));
-            bitmap.putImageData(y, modifiedComponent);
-            c--;
-            if (c < 0) {
-                whichByte++;
-                c = 7;
-            }
-        }
+        var extension = prepareFileExtension("file.png");
+        var toHide = prepareBytesToHide(in, extension);
+        putBytesToHide(1, toHide, bitmap);
     }
 
     @Override
     public @NonNull byte[] reveal(@NonNull IBmpFile bitmap) {
         var imageData = bitmap.getImageDataView();
-
-        var lsb1Offset = ByteBuffer.allocate(4).order(ByteOrder.BIG_ENDIAN);
-        for (var i = 0; i < 4; i++) {
-            lsb1Offset.put(getByte(1, imageData));
-        }
-        var max = lsb1Offset.getInt(0);
-        
-        var fileBytes = new byte[max];
-        for (var i = 0; i < max; i++) {
-            fileBytes[i] = getByte(1, imageData);
-        }
-        
-        var notNullChar = false;
-        var extension = "";
-        while (!notNullChar) {
-            var b = getByte(1, imageData);
-            if (b == 0) {
-                notNullChar = true;
-            } else {
-                extension += (char) b;
-            }
-        }
+        var limit = getLimit(1, imageData);
+        var bytes = getHiddenBytes(1, limit, imageData);
 
         //TODO: Do something with extension
-        return fileBytes;        
+        var extension = getExtension(1, imageData);
+
+        return bytes;        
     }
-
-    private int modifyBit(int number, int position, int bitValue) {
-		int mask = 1 << position;
-		return (number & ~mask) | ((bitValue << position) & mask);
-    }
-    
-    private int getBitByPosition(byte b, int bitPosition) {
-		return (b >> bitPosition & 1);
-	}
-
-    private String extractBits(int lsbFactor, byte data) {
-		var result = "";
-		for (var i = lsbFactor - 1 ; i >= 0; i--) {
-			var bitValue = getBitByPosition(data, i);
-			result += String.valueOf(bitValue);
-		}
-		return result;
-	}
-
-    private byte getByte(int lsbFactor, ByteBuffer imageData) {
-		var result = "";
-		for (var i = 0; i < 8 / lsbFactor; i++) {
-			result += extractBits(lsbFactor, imageData.get());
-		}
-		return (byte) Integer.parseInt(result, 2);
-	}
 }
