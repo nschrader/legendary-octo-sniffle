@@ -10,12 +10,12 @@ public interface IBmpFileIO {
      * @throws BmpFileException
      * @throws FileException
      */
-    public @NonNull IBmpFile read(@NonNull File file);
+    @NonNull IBmpFile read(@NonNull File file);
 
     /**
      * Write BMP file to disk
      * @throws BmpFileException
      * @throws FileException
      */
-    public void write(@NonNull File file, @NonNull IBmpFile bmpFile);
+    void write(@NonNull File file, @NonNull IBmpFile bmpFile);
 }
