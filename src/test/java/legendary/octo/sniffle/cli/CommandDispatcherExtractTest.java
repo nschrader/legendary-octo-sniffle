@@ -48,9 +48,9 @@ public class CommandDispatcherExtractTest extends ACommandDispatcherBaseTest {
     }
 
     @Test
-    public void testExtractLSB2() {
-        new CommandLine(commandDispatcher).execute("-extract", "-p", "in.bmp", "-out", "outFile", "-steg", "LSB2");
-        verify(lsb2Mock).reveal(any());
+    public void testExtractLSB4() {
+        new CommandLine(commandDispatcher).execute("-extract", "-p", "in.bmp", "-out", "outFile", "-steg", "LSB4");
+        verify(lsb4Mock).reveal(any());
     }
 
     @Test

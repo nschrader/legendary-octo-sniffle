@@ -50,9 +50,9 @@ public class CommandDispatcherEmbedTest extends ACommandDispatcherBaseTest {
     }
 
     @Test
-    public void testEmbedLSB2() {
-        executeCommandLineAndAssert(SUCCESS, "-embed", "-in", "inFile", "-p", "in.bmp", "-out", "out.bmp", "-steg", "LSB2");
-        verify(lsb2Mock).conceal(any(), any());
+    public void testEmbedLSB4() {
+        executeCommandLineAndAssert(SUCCESS, "-embed", "-in", "inFile", "-p", "in.bmp", "-out", "out.bmp", "-steg", "LSB4");
+        verify(lsb4Mock).conceal(any(), any());
     }
 
     @Test

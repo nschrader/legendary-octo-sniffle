@@ -9,7 +9,7 @@ import lombok.NonNull;
  * Available steganography methods
  */
 public enum EStegano {
-    LSB1, LSB2, LSBI;
+    LSB1, LSB4, LSBI;
 
     /**
      * Helper to retrieve an annotated Guice binding

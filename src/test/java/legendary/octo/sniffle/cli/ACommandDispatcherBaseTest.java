@@ -46,9 +46,9 @@ public abstract class ACommandDispatcherBaseTest {
     protected IStegano lsb1Mock;
 
     @Bind
-    @Named("LSB2")
+    @Named("LSB4")
     @Mock
-    protected IStegano lsb2Mock;
+    protected IStegano lsb4Mock;
 
     @Bind
     @Named("LSBI")

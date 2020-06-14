@@ -1,7 +1,7 @@
 package legendary.octo.sniffle.app;
 
 import static legendary.octo.sniffle.core.EStegano.LSB1;
-import static legendary.octo.sniffle.core.EStegano.LSB2;
+import static legendary.octo.sniffle.core.EStegano.LSB4;
 import static legendary.octo.sniffle.core.EStegano.LSBI;
 
 import com.google.inject.AbstractModule;
@@ -16,7 +16,7 @@ import legendary.octo.sniffle.core.IStegano;
 import legendary.octo.sniffle.io.BmpFileIO;
 import legendary.octo.sniffle.io.FileIO;
 import legendary.octo.sniffle.stegano.LSB1Impl;
-import legendary.octo.sniffle.stegano.LSB2Impl;
+import legendary.octo.sniffle.stegano.LSB4Impl;
 import legendary.octo.sniffle.stegano.LSBIImpl;
 
 /**
@@ -32,7 +32,7 @@ public class DependencyModule extends AbstractModule {
         bind(ICipher.class).to(CipherImpl.class);
         bind(IRC4.class).to(RC4Impl.class);
         bind(IStegano.class).annotatedWith(LSB1.named()).to(LSB1Impl.class);
-        bind(IStegano.class).annotatedWith(LSB2.named()).to(LSB2Impl.class);
+        bind(IStegano.class).annotatedWith(LSB4.named()).to(LSB4Impl.class);
         bind(IStegano.class).annotatedWith(LSBI.named()).to(LSBIImpl.class);
     }
 }

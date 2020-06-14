@@ -4,7 +4,7 @@ import legendary.octo.sniffle.core.IBmpFile;
 import legendary.octo.sniffle.core.IStegano;
 import lombok.NonNull;
 
-public class LSB2Impl implements IStegano {
+public class LSB4Impl implements IStegano {
 
     @Override
     public void conceal(@NonNull byte[] in, @NonNull IBmpFile bitmap) {
