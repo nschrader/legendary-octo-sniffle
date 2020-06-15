@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
 
@@ -21,6 +20,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import legendary.octo.sniffle.core.DCommonFile;
 import legendary.octo.sniffle.error.FileException;
+import lombok.SneakyThrows;
 
 public class FileIOTest {
     private final File root = new File("/");
@@ -35,7 +35,8 @@ public class FileIOTest {
     }
 
     @Test
-    public void read(@TempDir Path dir) throws IOException {
+    @SneakyThrows
+    public void read(@TempDir Path dir) {
         var f = dir.resolve("file.x").toFile();
         Files.asByteSink(f).write(simpleData.getBytes());
         assertEquals(simpleData, fileIO.read(f));
@@ -47,7 +48,8 @@ public class FileIOTest {
     }
 
     @Test
-    public void readTooBig(@TempDir Path dir) throws IOException {
+    @SneakyThrows
+    public void readTooBig(@TempDir Path dir) {
         var f = dir.resolve("big").toFile();
         try (var raf = new RandomAccessFile(f, "rw")) {
             raf.setLength(51 * FileIO.MiB);
@@ -59,10 +61,19 @@ public class FileIOTest {
     }
 
     @Test
-    public void write(@TempDir Path dir) throws IOException {
-        var f = dir.resolve("file").toFile();
+    @SneakyThrows
+    public void write(@TempDir Path dir) {
+        var f = dir.resolve("file.x").toFile();
         fileIO.write(f, simpleData);
         assertArrayEquals(simpleData.getBytes(), Files.asByteSource(f).read());
+    }
+
+    @Test
+    @SneakyThrows
+    public void writeNoExtension(@TempDir Path dir) {
+        var f = dir.resolve("file").toFile();
+        fileIO.write(f, simpleData);
+        assertTrue(dir.resolve("file.x").toFile().exists());
     }
 
     @Test

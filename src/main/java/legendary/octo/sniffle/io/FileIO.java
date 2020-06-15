@@ -33,8 +33,13 @@ public class FileIO implements IFileIO {
     @Override
     public void write(@NonNull File file, @NonNull DCommonFile content) {
         try {
+            var extension = "." + content.getExtension();
+            if (!file.getPath().endsWith(extension)) {
+                var newPath = file.getPath() + extension;
+                file = new File(newPath);
+            }
+
             var sink = Files.asByteSink(file);
-            //TODO: Decide what to do with extension
             sink.write(content.getBytes());
         } catch (IOException e) {
             throw new FileException(e);
