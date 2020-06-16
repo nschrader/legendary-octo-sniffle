@@ -45,12 +45,20 @@ public class LSB1ImplTest {
         expectedSizeField[29] = 0x01;
         expectedSizeField[30] = 0x00;
         expectedSizeField[31] = 0x01;
-
         assertArrayEquals(expectedSizeField, Arrays.copyOf(bm, LSB1_OFFSET));
-        for (var i = 0; i < IN_LEN * LSB1_FACTOR; i++) {
-            assertEquals(0x01, bm[LSB1_OFFSET + i]);
-            //TODO: Test extension
-        }
+
+        var hcl = IN_LEN*LSB1_FACTOR;
+        var expectedOut = new byte[hcl];
+        Arrays.fill(expectedOut, (byte) 0x01);
+        assertArrayEquals(expectedOut, Arrays.copyOfRange(bm, LSB1_OFFSET, LSB1_OFFSET + hcl));
+
+        var hcp = hcl + LSB1_OFFSET;
+        var expectedExtension = new byte[] {
+            0x00, 0x00, 0x01, 0x00, 0x01, 0x01, 0x01, 0x00, // "." = 0x2E
+            0x00, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, // "x" = 0x78
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // NULL = 0x00
+        };
+        assertArrayEquals(expectedExtension, Arrays.copyOfRange(bm, hcp, hcp + 24));
     }
 
     @Test

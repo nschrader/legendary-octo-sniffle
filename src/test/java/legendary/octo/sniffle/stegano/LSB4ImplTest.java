@@ -43,12 +43,20 @@ public class LSB4ImplTest {
         Arrays.fill(expectedSizeField, (byte) 0x00);
         expectedSizeField[6] = 0x00;
         expectedSizeField[7] = 0x0D;
-
         assertArrayEquals(expectedSizeField, Arrays.copyOf(bm, LSB4_OFFSET));
-        for (var i = 0; i < IN_LEN * LSB4_FACTOR; i++) {
-            assertEquals(0x0F, bm[LSB4_OFFSET + i]);
-        }
-        // TODO: Test extension
+
+        var hcl = IN_LEN*LSB4_FACTOR;
+        var expectedOut = new byte[hcl];
+        Arrays.fill(expectedOut, (byte) 0x0F);
+        assertArrayEquals(expectedOut, Arrays.copyOfRange(bm, LSB4_OFFSET, LSB4_OFFSET + hcl));
+
+        var hcp = hcl + LSB4_OFFSET;
+        var expectedExtension = new byte[] {
+            0x02, 0x0E, // "." = 0x2E
+            0x07, 0x08, // "x" = 0x78
+            0x00, 0x00, // NULL = 0x00
+        };
+        assertArrayEquals(expectedExtension, Arrays.copyOfRange(bm, hcp, hcp + 6));
     }
 
     @Test
