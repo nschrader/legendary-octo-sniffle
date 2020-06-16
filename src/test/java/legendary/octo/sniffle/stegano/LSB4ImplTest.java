@@ -1,5 +1,6 @@
 package legendary.octo.sniffle.stegano;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -37,7 +38,13 @@ public class LSB4ImplTest {
 
         new LSB4Impl().conceal(new DCommonFile("x", in), bitmap);
 
-        //TODO: Test size field
+        // Last crumb of size field contains 0x0D = 13
+        var expectedSizeField = new byte[LSB4_OFFSET];
+        Arrays.fill(expectedSizeField, (byte) 0x00);
+        expectedSizeField[6] = 0x00;
+        expectedSizeField[7] = 0x0D;
+
+        assertArrayEquals(expectedSizeField, Arrays.copyOf(bm, LSB4_OFFSET));
         for (var i = 0; i < IN_LEN * LSB4_FACTOR; i++) {
             assertEquals(0x0F, bm[LSB4_OFFSET + i]);
         }
