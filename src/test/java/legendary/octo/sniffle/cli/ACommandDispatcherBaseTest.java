@@ -22,6 +22,7 @@ import legendary.octo.sniffle.core.IBmpFileIO;
 import legendary.octo.sniffle.core.ICipher;
 import legendary.octo.sniffle.core.IFileIO;
 import legendary.octo.sniffle.core.IStegano;
+import legendary.octo.sniffle.core.ISteganoFormatter;
 import lombok.NonNull;
 import picocli.CommandLine;
 
@@ -39,6 +40,10 @@ abstract class ACommandDispatcherBaseTest {
     @Bind
     @Mock
     protected ICipher cipherMock;
+
+    @Bind
+    @Mock
+    protected ISteganoFormatter steganoFormatterMock;
 
     @Bind
     @Named("LSB1")

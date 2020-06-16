@@ -30,19 +30,25 @@ public class CommandDispatcherExtractTest extends ACommandDispatcherBaseTest {
         assertEquals("outFile", outFileCaptor.getValue().getName());
 
         verify(lsb1Mock).reveal(any());
+        verify(steganoFormatterMock).scanEncrypted(any());
         verify(cipherMock).decrypt(any(), eq("foo"), eq(ECipher.aes128), eq(EMode.cbc));
+        verify(steganoFormatterMock).scan(any());
     }
 
     @Test
     public void testExtractPlain() {
         new CommandLine(commandDispatcher).execute("-extract", "-p", "in.bmp", "-out", "outFile", "-steg", "LSB1");
+        verify(steganoFormatterMock, never()).scanEncrypted(any());
         verify(cipherMock, never()).decrypt(any(), any(), any(), any());
+        verify(steganoFormatterMock).scan(any());
     }
 
     @Test
     public void testExtractPlainForced() {
         new CommandLine(commandDispatcher).execute("-extract", "-p", "in.bmp", "-out", "outFile", "-steg", "LSB1", "-a", "des", "-m", "ecb");
+        verify(steganoFormatterMock, never()).scanEncrypted(any());
         verify(cipherMock, never()).decrypt(any(), any(), any(), any());
+        verify(steganoFormatterMock).scan(any());
     }
 
     @Test

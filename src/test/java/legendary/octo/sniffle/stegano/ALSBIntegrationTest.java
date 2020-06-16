@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import legendary.octo.sniffle.core.IBmpFileIO;
 import legendary.octo.sniffle.core.IFileIO;
 import legendary.octo.sniffle.core.IStegano;
+import legendary.octo.sniffle.core.ISteganoFormatter;
 import legendary.octo.sniffle.io.BmpFileIO;
 import legendary.octo.sniffle.io.FileIO;
 import lombok.NonNull;
@@ -40,24 +41,29 @@ abstract class ALSBIntegrationTest {
     }
 
     protected void concealAndCompareAgainstTestVector(
-        @NonNull IStegano impl, 
-        @NonNull String carrier, 
-        @NonNull String secret, 
-        @NonNull String testVector) {
+            @NonNull IStegano impl,
+            @NonNull ISteganoFormatter f,
+            @NonNull String carrier, 
+            @NonNull String secret, 
+            @NonNull String testVector) {
         var carrierBmp = bmpFileIO.read(getResource(carrier));
         var toHide = fileIO.read(getResource(secret));
-        impl.conceal(toHide, carrierBmp);
+
+        var formatted = f.format(toHide);
+        impl.conceal(formatted, carrierBmp);
 
         var expected = bmpFileIO.read(getResource(testVector));
         assertEquals(expected.getCommonFile(), carrierBmp.getCommonFile());
     }
 
     protected void revealAndCompareAgainstTestVector(
-        @NonNull IStegano impl, 
-        @NonNull String secret, 
-        @NonNull String testVector) {
+            @NonNull IStegano impl,
+            @NonNull ISteganoFormatter f,
+            @NonNull String secret, 
+            @NonNull String testVector) {
         var carrierBmp = bmpFileIO.read(getResource(testVector));
-        var result = impl.reveal(carrierBmp);
+        var formatted = impl.reveal(carrierBmp);
+        var result = f.scan(formatted);
 
         var expected = fileIO.read(getResource(secret));
         assertEquals(expected, result);
@@ -65,13 +71,16 @@ abstract class ALSBIntegrationTest {
 
     protected void concealAndReveal(
         @NonNull IStegano impl, 
+        @NonNull ISteganoFormatter f,
         @NonNull String carrier, 
         @NonNull String secret) {
         var carrierBmp = bmpFileIO.read(getResource(carrier));
         var toHide = fileIO.read(getResource(secret));
 
-        impl.conceal(toHide, carrierBmp);
-        var hidden = impl.reveal(carrierBmp);
+        var formatted = f.format(toHide);
+        impl.conceal(formatted, carrierBmp);
+        var hiddenFormatted = impl.reveal(carrierBmp);
+        var hidden = f.scan(hiddenFormatted);
 
         assertEquals(toHide, hidden);
     }

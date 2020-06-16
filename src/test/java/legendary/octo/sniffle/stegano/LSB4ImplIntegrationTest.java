@@ -5,23 +5,26 @@ import com.google.inject.Inject;
 import org.junit.jupiter.api.Test;
 
 public class LSB4ImplIntegrationTest extends ALSBIntegrationTest {
-    //TODO: Add error tests (nothing hidden, to big to hide)
+    //TODO: Add error tests (nothing hidden, to big to hide, too small to hide something)
 
     @Inject
     private LSB4Impl lsb4Impl;
 
+    @Inject 
+    private SteganoFormatter f;
+
     @Test
     public void conceal() {
-        concealAndCompareAgainstTestVector(lsb4Impl, "lado.bmp", "itba.png", "ladoLSB4.bmp");
+        concealAndCompareAgainstTestVector(lsb4Impl, f, "lado.bmp", "itba.png", "ladoLSB4.bmp");
     }
 
     @Test
     public void reveal() {
-        revealAndCompareAgainstTestVector(lsb4Impl, "itba.png", "ladoLSB4.bmp");
+        revealAndCompareAgainstTestVector(lsb4Impl, f, "itba.png", "ladoLSB4.bmp");
     }
 
     @Test
     public void invertible() {
-        concealAndReveal(lsb4Impl, "lado.bmp", "itba.png");
+        concealAndReveal(lsb4Impl, f, "lado.bmp", "itba.png");
     }    
 }

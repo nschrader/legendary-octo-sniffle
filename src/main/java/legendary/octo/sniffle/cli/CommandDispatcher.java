@@ -4,12 +4,14 @@ import java.io.File;
 
 import com.google.inject.Inject;
 
+import legendary.octo.sniffle.core.DCommonFile;
 import legendary.octo.sniffle.core.ECipher;
 import legendary.octo.sniffle.core.EMode;
 import legendary.octo.sniffle.core.EStegano;
 import legendary.octo.sniffle.core.IBmpFileIO;
 import legendary.octo.sniffle.core.ICipher;
 import legendary.octo.sniffle.core.IFileIO;
+import legendary.octo.sniffle.core.ISteganoFormatter;
 import lombok.RequiredArgsConstructor;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -25,6 +27,7 @@ public class CommandDispatcher implements Runnable {
     private final ICipher cipherImpl;
     private final IFileIO fileIOImpl;
     private final IBmpFileIO BmpFileIOImpl;
+    private final ISteganoFormatter steganoFormImpl;
 
     @Command(name = "-embed", showDefaultValues = true)
     void embed(@Option(names = "-help", usageHelp = true) Boolean help,
@@ -37,14 +40,18 @@ public class CommandDispatcher implements Runnable {
                @Option(names = "-pass", paramLabel = "password") String password) {
         var steganoImpl = steganoResolver.getSteganoFor(steganography);
         var in = fileIOImpl.read(inFile);
-        var bitmap = BmpFileIOImpl.read(bitmapFile);
+        var formatted = steganoFormImpl.format(in);
 
-        //TODO: Fix
+        byte[] secret;
         if (password != null) {
-            cipherImpl.encrypt(new byte[1], password, cipher, mode);
+            var ciphertext = cipherImpl.encrypt(formatted, password, cipher, mode);
+            secret = steganoFormImpl.formatEncrypted(ciphertext);
+        } else {
+            secret = formatted;
         }
         
-        steganoImpl.conceal(in, bitmap);    
+        var bitmap = BmpFileIOImpl.read(bitmapFile);
+        steganoImpl.conceal(secret, bitmap);    
         BmpFileIOImpl.write(outFile, bitmap);
     }
 
@@ -58,14 +65,18 @@ public class CommandDispatcher implements Runnable {
                  @Option(names = "-pass", paramLabel = "password") String password) {
         var steganoImpl = steganoResolver.getSteganoFor(steganography);
         var bitmap = BmpFileIOImpl.read(bitmapFile);
-        var out = steganoImpl.reveal(bitmap);
+        var formatted = steganoImpl.reveal(bitmap);
 
-        //TODO: Fix
+        DCommonFile secret;
         if (password != null) {
-            cipherImpl.decrypt(new byte[1], password, cipher, mode);
+            var ciphertext = steganoFormImpl.scanEncrypted(formatted);
+            var plaintext = cipherImpl.decrypt(ciphertext, password, cipher, mode);
+            secret = steganoFormImpl.scan(plaintext);
+        } else {
+            secret = steganoFormImpl.scan(formatted);
         }
 
-        fileIOImpl.write(outFile, out);
+        fileIOImpl.write(outFile, secret);
     }
 
     @Option(names = "-help", usageHelp = true, description = "Display help and exit")

@@ -1,10 +1,8 @@
 package legendary.octo.sniffle.stegano;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import legendary.octo.sniffle.core.IBmpFile;
-import legendary.octo.sniffle.error.SteganoException;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
@@ -36,32 +34,9 @@ class LSBnUtils {
 		}
 		return (byte) Integer.parseInt(result, 2);
     }
-    
-    @NonNull String getExtension(int lsbFactor, @NonNull ByteBuffer imageData) {
-        var notNullChar = false;
-        var extension = "";
 
-        while (!notNullChar) {
-            var b = getByte(lsbFactor, imageData);
-            if (b == 0x00) {
-                notNullChar = true;
-            } else if (b != 0x2e) {
-                extension += (char) b;
-            }
-        }
-
-        return extension;
-    }
-
-    int getLimit(int lsbFactor, @NonNull ByteBuffer imageData) {
-        var offset = ByteBuffer.allocate(4).order(ByteOrder.BIG_ENDIAN);
-        for (var i = 0; i < 4; i++) {
-            offset.put(getByte(lsbFactor, imageData));
-        }
-        return offset.getInt(0);
-    }
-
-    @NonNull byte[] getHiddenBytes(int lsbFactor, int limit, @NonNull ByteBuffer imageData) {
+    @NonNull byte[] getHiddenBytes(int lsbFactor, @NonNull ByteBuffer imageData) {
+        var limit = imageData.capacity() / 8 * lsbFactor;
         var bytes = new byte[limit];
         for (var i = 0; i < limit; i++) {
             bytes[i] = getByte(lsbFactor, imageData);
@@ -69,25 +44,8 @@ class LSBnUtils {
         return bytes;
     }
 
-    @NonNull byte[] prepareFileExtension(@NonNull String rawExtension) {
-        if (rawExtension.isEmpty()) {
-            throw new SteganoException("No file extension to embed, use a file that has one");
-        }
-        return ('.' + rawExtension + '\0').getBytes();
-    }
-
-    @NonNull ByteBuffer prepareBytesToHide(@NonNull byte[] data, @NonNull byte[] extension) {
-        var lengthToHide = Integer.BYTES + data.length + extension.length;
-        var toHide = ByteBuffer.allocate(lengthToHide).order(ByteOrder.BIG_ENDIAN);
-
-        toHide.putInt(data.length);
-        toHide.put(data);
-        toHide.put(extension);
-
-        return toHide;
-    }
-
-    void putBytesToHide(int lsbFactor, @NonNull ByteBuffer toHide, @NonNull IBmpFile bitmap) {
+    void putBytesToHide(int lsbFactor, @NonNull byte[] data, @NonNull IBmpFile bitmap) {
+        var toHide = ByteBuffer.wrap(data);
         var whichByte = 0;
         var c = 7;
 

@@ -13,11 +13,13 @@ import legendary.octo.sniffle.core.ICipher;
 import legendary.octo.sniffle.core.IFileIO;
 import legendary.octo.sniffle.core.IRC4;
 import legendary.octo.sniffle.core.IStegano;
+import legendary.octo.sniffle.core.ISteganoFormatter;
 import legendary.octo.sniffle.io.BmpFileIO;
 import legendary.octo.sniffle.io.FileIO;
 import legendary.octo.sniffle.stegano.LSB1Impl;
 import legendary.octo.sniffle.stegano.LSB4Impl;
 import legendary.octo.sniffle.stegano.LSBIImpl;
+import legendary.octo.sniffle.stegano.SteganoFormatter;
 
 /**
  * Configure Guice dependency injection to use concrete implementations 
@@ -31,6 +33,7 @@ public class DependencyModule extends AbstractModule {
         bind(IBmpFileIO.class).to(BmpFileIO.class);
         bind(ICipher.class).to(CipherImpl.class);
         bind(IRC4.class).to(RC4Impl.class);
+        bind(ISteganoFormatter.class).to(SteganoFormatter.class);
         bind(IStegano.class).annotatedWith(LSB1.named()).to(LSB1Impl.class);
         bind(IStegano.class).annotatedWith(LSB4.named()).to(LSB4Impl.class);
         bind(IStegano.class).annotatedWith(LSBI.named()).to(LSBIImpl.class);

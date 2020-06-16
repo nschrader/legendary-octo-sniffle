@@ -35,19 +35,25 @@ public class CommandDispatcherEmbedTest extends ACommandDispatcherBaseTest {
         assertEquals("out.bmp", outFileCaptor.getValue().getName());
 
         verify(lsb1Mock).conceal(any(), any());
+        verify(steganoFormatterMock).format(any());
         verify(cipherMock).encrypt(any(), eq("foo"), eq(ECipher.aes128), eq(EMode.cbc));
+        verify(steganoFormatterMock).formatEncrypted(any());
     }
 
     @Test
     public void testEmbedPlain() {
         executeCommandLineAndAssert(SUCCESS, "-embed", "-in", "inFile", "-p", "in.bmp", "-out", "out.bmp", "-steg", "LSB1");
+        verify(steganoFormatterMock).format(any());
         verify(cipherMock, never()).encrypt(any(), any(), any(), any());
+        verify(steganoFormatterMock, never()).formatEncrypted(any());
     }
 
     @Test
     public void testEmbedPlainForced() {
         executeCommandLineAndAssert(SUCCESS, "-embed", "-in", "inFile", "-p", "in.bmp", "-out", "out.bmp", "-steg", "LSB1", "-a", "des", "-m", "ecb");
+        verify(steganoFormatterMock).format(any());
         verify(cipherMock, never()).encrypt(any(), any(), any(), any());
+        verify(steganoFormatterMock, never()).formatEncrypted(any());
     }
 
     @Test

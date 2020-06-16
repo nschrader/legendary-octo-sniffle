@@ -8,8 +8,12 @@ import lombok.NonNull;
 public class CipherImpl implements ICipher {
 
     @Override
-    public void encrypt(@NonNull byte[] data, @NonNull String password, @NonNull ECipher cipher, @NonNull EMode mode) { }
+    public byte[] encrypt(@NonNull byte[] data, @NonNull String password, @NonNull ECipher cipher, @NonNull EMode mode) { 
+        return data;
+    }
 
     @Override
-    public void decrypt(@NonNull byte[] data, @NonNull String password, @NonNull ECipher cipher, @NonNull EMode mode) { }
+    public byte[] decrypt(@NonNull byte[] data, @NonNull String password, @NonNull ECipher cipher, @NonNull EMode mode) { 
+        return data;
+    }
 }

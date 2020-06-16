@@ -64,8 +64,8 @@ public class SteganoFormatter implements ISteganoFormatter {
     }
 
     private @NonNull Pair<@NonNull byte[], String> getDataAndExtension(
-        @NonNull byte[] encryptedData, 
-        @NonNull Boolean hasExtension) {
+            @NonNull byte[] encryptedData, 
+            @NonNull Boolean hasExtension) {
         try {
             var byteBuffer = ByteBuffer.wrap(encryptedData).order(ByteOrder.BIG_ENDIAN);
             var len = byteBuffer.getInt();

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.io.TempDir;
 import lombok.SneakyThrows;
 
 public class AppIntegrationTest {
+    //TODO: Add test with encrypted test vector
 
     @Test
     @SneakyThrows
@@ -23,7 +24,7 @@ public class AppIntegrationTest {
         var in = Resources.getResource("itba.png").getPath();
         var outFile = dir.resolve("outFile");
 
-        App.main("-embed", "-in", in, "-p", bitmap, "-out", outFile.toString(), "-steg", "LSB1", "-pass", "foo");
+        App.main("-embed", "-in", in, "-p", bitmap, "-out", outFile.toString(), "-steg", "LSB1");
         assertArrayEquals(Resources.toByteArray(Resources.getResource("ladoLSB1.bmp")), Files.readAllBytes(outFile));
     }
 
@@ -34,7 +35,7 @@ public class AppIntegrationTest {
         var bitmap = Resources.getResource("ladoLSB1.bmp").getPath();
         var outFile = dir.resolve("outFile");
 
-        App.main("-extract", "-p", bitmap, "-out", outFile.toString(), "-steg", "LSB1", "-pass", "foo");
+        App.main("-extract", "-p", bitmap, "-out", outFile.toString(), "-steg", "LSB1");
         assertArrayEquals(Resources.toByteArray(Resources.getResource("itba.png")), Files.readAllBytes(outFile));
     }
 
