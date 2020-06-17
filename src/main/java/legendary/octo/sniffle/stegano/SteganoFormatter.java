@@ -66,20 +66,36 @@ public class SteganoFormatter implements ISteganoFormatter {
     private @NonNull Pair<@NonNull byte[], String> getDataAndExtension(
             @NonNull byte[] encryptedData, 
             @NonNull Boolean hasExtension) {
-        try {
-            var byteBuffer = ByteBuffer.wrap(encryptedData).order(ByteOrder.BIG_ENDIAN);
-            var len = byteBuffer.getInt();
-            var unformattedData = new byte[len];
+        var byteBuffer = ByteBuffer.wrap(encryptedData).order(ByteOrder.BIG_ENDIAN);
+        var len = getLength(byteBuffer);
+        var unformattedData = getData(len, byteBuffer);
 
-            byteBuffer.get(unformattedData, 0, len);
-            if (hasExtension) {
-                return Pair.of(unformattedData, getExtension(byteBuffer));
-            } else {
-                return Pair.of(unformattedData, null);
-            }
-        } catch (BufferUnderflowException e) {
-            throw new SteganoException(e);
+        if (hasExtension) {
+            return Pair.of(unformattedData, getExtension(byteBuffer));
+        } else {
+            return Pair.of(unformattedData, null);
         }
+        
+    }
+
+    private int getLength(@NonNull ByteBuffer byteBuffer) {
+        try {
+           return byteBuffer.getInt();
+        } catch (BufferUnderflowException e) {
+            throw new SteganoException(e, "Bitmap (%d bytes) too short to hide any data", byteBuffer.capacity());
+        }
+    }
+
+    private @NonNull byte[] getData(int length, @NonNull ByteBuffer byteBuffer) {
+        var data = new byte[length];
+
+        try {
+            byteBuffer.get(data, 0, length);
+         } catch (BufferUnderflowException e) {
+             throw new SteganoException(e, "Malformed stegano header");
+         }
+
+         return data;
     }
 
     private @NonNull String getExtension(@NonNull ByteBuffer byteBuffer) {
@@ -90,13 +106,21 @@ public class SteganoFormatter implements ISteganoFormatter {
         }
             
         while (true) {
-            var b = byteBuffer.get();
+            var b = safeGetExtensionChar(byteBuffer);
             if (b == 0x00) {
                 break;
             }
-            sb.append((char) b);
+            sb.append(b);
         }
 
         return sb.toString();
-    }    
+    }
+
+    private char safeGetExtensionChar(@NonNull ByteBuffer byteBuffer) {
+        try {
+            return (char) byteBuffer.get();
+        } catch (BufferUnderflowException e) {
+            throw new SteganoException(e, "Malformed extension footer");
+        }
+    }
 }

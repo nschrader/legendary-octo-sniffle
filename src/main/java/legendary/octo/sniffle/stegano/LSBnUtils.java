@@ -2,7 +2,7 @@ package legendary.octo.sniffle.stegano;
 
 import java.nio.ByteBuffer;
 
-import legendary.octo.sniffle.core.IBmpFile;
+import legendary.octo.sniffle.error.SteganoException;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
@@ -44,16 +44,16 @@ class LSBnUtils {
         return bytes;
     }
 
-    void putBytesToHide(int lsbFactor, @NonNull byte[] data, @NonNull IBmpFile bitmap) {
+    void putBytesToHide(int lsbFactor, @NonNull byte[] data, @NonNull ByteBuffer bitmap) {
         var toHide = ByteBuffer.wrap(data);
         var whichByte = 0;
         var c = 7;
 
         for (var y = 0; y < toHide.capacity() * 8 / lsbFactor; y++) {
             for (var z = lsbFactor-1; z >= 0; z--) {
-                var component = bitmap.getImageData(y);
+                var component = safeGetByte(y, bitmap);
                 var modifiedComponent = (byte) modifyBit(component, z, getBitByPosition(toHide.get(whichByte), c));
-                bitmap.putImageData(y, modifiedComponent);
+                bitmap.put(y, modifiedComponent);
                 c--;
             }
 
@@ -61,6 +61,14 @@ class LSBnUtils {
                 whichByte++;
                 c = 7;
             }
+        }
+    }
+
+    byte safeGetByte(int index, @NonNull ByteBuffer bitmap) {
+        try {
+            return bitmap.get(index);
+        } catch (IndexOutOfBoundsException e) {
+            throw new SteganoException(e, "Bitmap (%d bytes) too small to hide data", bitmap.capacity());
         }
     }
 }

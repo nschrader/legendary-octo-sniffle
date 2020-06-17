@@ -1,6 +1,6 @@
 package legendary.octo.sniffle.stegano;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static legendary.octo.sniffle.stegano.AssertBytesUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,26 +14,16 @@ import legendary.octo.sniffle.error.SteganoException;
 
 public class SteganoFormatterTest {
 
-    private void assertArrayFilledWith(int expected, byte[] actual, int inclusiveStart, int exclusiveEnd) {
-        var expectedArray = new byte[exclusiveEnd-inclusiveStart];
-        Arrays.fill(expectedArray, (byte) expected);
-
-        var actualArray = Arrays.copyOfRange(actual, inclusiveStart, exclusiveEnd);
-        assertArrayEquals(expectedArray, actualArray);
-    }
-
     @Test
     public void testFormat() {
         var in = new byte[13];
         Arrays.fill(in, (byte) 0xFF);
         var out = new SteganoFormatter().format(new DCommonFile("x", in));
 
-        assertArrayFilledWith(0x00, out, 0, 3); // First 3 crumbs are null
-        assertArrayFilledWith(0x0D, out, 3, 4); // Last crumb of size field contains 0x0D = 13
-        assertArrayFilledWith(0xFF, out, 4, 17); // Payload
-        assertArrayFilledWith(0x2E, out, 17, 18); // "."
-        assertArrayFilledWith(0x78, out, 18, 19); // "x"
-        assertArrayFilledWith(0x00, out, 19, 20); // NULL
+        assertArrayFilledWith(out, 0, 3, 0x00); // First 3 crumbs are null
+        assertArrayFilledWith(out, 3, 4, 0x0D); // Last crumb of size field contains 0x0D = 13
+        assertArrayFilledWith(out, 4, 17, 0xFF); // Payload
+        assertArrayFilledWith(out, 17, 18, 0x2E, 0x78, 0x00); // ".x\0"
         assertEquals(20, out.length);
     }
 
@@ -54,9 +44,9 @@ public class SteganoFormatterTest {
         Arrays.fill(in, (byte) 0xFF);
         var out = new SteganoFormatter().formatEncrypted(in);
 
-        assertArrayFilledWith(0x00, out, 0, 3); // First 3 crumbs of size field are null
-        assertArrayFilledWith(0x0D, out, 3, 4); // Last crumb contains 0x0D = 13
-        assertArrayFilledWith(0xFF, out, 4, 17); // Payload
+        assertArrayFilledWith(out, 0, 3, 0x00); // First 3 crumbs of size field are null
+        assertArrayFilledWith(out, 3, 4, 0x0D); // Last crumb contains 0x0D = 13
+        assertArrayFilledWith(out, 4, 17, 0xFF); // Payload
         assertEquals(17, out.length);
     }
 
@@ -72,7 +62,7 @@ public class SteganoFormatterTest {
 
         var out = new SteganoFormatter().scan(in);
         assertEquals("x", out.getExtension());
-        assertArrayFilledWith(0xFF, out.getBytes(), 0, 7);
+        assertArrayFilledWith(out.getBytes(), 0, 7, 0xFF);
         assertEquals(7, out.getBytes().length);
     }
 
@@ -95,7 +85,7 @@ public class SteganoFormatterTest {
     }
 
     @Test
-    public void testScanunterminatedFileExtension() {
+    public void testScanUnterminatedFileExtension() {
         var in = new byte[13];
         Arrays.fill(in, 0, 3, (byte) 0x00); // First 3 crumbs of size field are null
         Arrays.fill(in, 3, 4, (byte) 0x07); // Last crumb contains 7
@@ -104,7 +94,11 @@ public class SteganoFormatterTest {
         Arrays.fill(in, 12, 13, (byte) 0x78); // "x"
 
         var formatter = new SteganoFormatter();
-        assertThrows(SteganoException.class, () -> formatter.scan(in));
+        assertTrue(
+            assertThrows(SteganoException.class, () -> formatter.scan(in))
+                .getMessage()
+                .toLowerCase()
+                .contains("malformed"));
     }
 
     @Test
@@ -118,7 +112,11 @@ public class SteganoFormatterTest {
         Arrays.fill(in, 13, 14, (byte) 0x00); // NULL
 
         var formatter = new SteganoFormatter();
-        assertThrows(SteganoException.class, () -> formatter.scan(in));
+        assertTrue(
+            assertThrows(SteganoException.class, () -> formatter.scan(in))
+                .getMessage()
+                .toLowerCase()
+                .contains("malformed"));
     }
 
     @Test
@@ -129,7 +127,7 @@ public class SteganoFormatterTest {
         Arrays.fill(in, 4, 11, (byte) 0xFF); // Payload
 
         var out = new SteganoFormatter().scanEncrypted(in);
-        assertArrayFilledWith(0xFF, out, 0, 7);
+        assertArrayFilledWith(out, 0, 7, 0xFF);
         assertEquals(7, out.length);
     }
 
@@ -141,7 +139,10 @@ public class SteganoFormatterTest {
         Arrays.fill(in, 4, 11, (byte) 0xFF); // Payload
 
         var formatter = new SteganoFormatter();
-        assertThrows(SteganoException.class, () -> formatter.scan(in));
+        assertTrue(
+            assertThrows(SteganoException.class, () -> formatter.scanEncrypted(in))
+                .getMessage()
+                .toLowerCase()
+                .contains("malformed"));
     }
-    
 }

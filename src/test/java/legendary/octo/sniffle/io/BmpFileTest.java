@@ -48,10 +48,11 @@ public class BmpFileTest {
 
     @Test
     @SneakyThrows
-    public void testImageData() {
+    public void testImageDataView() {
         var file = new BmpFile(getCommonFile("ok.bmp"));
-        assertEquals(0x13, file.getImageData(0));
-        assertEquals(0x07, file.getImageData(4*5*3-1));
+        var view = file.getImageDataView();
+        assertEquals(0x13, view.get(0));
+        assertEquals(0x07, view.get(4*5*3-1));
     }
 
     @Test
