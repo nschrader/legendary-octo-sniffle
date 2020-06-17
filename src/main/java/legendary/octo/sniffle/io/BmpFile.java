@@ -103,19 +103,7 @@ public class BmpFile implements IBmpFile {
     }
 
     @Override
-    public @NonNull byte getImageData(@NonNull Integer index) {
-        return byteBuffer.get(imageOffset + index);
-    }
-
-    @Override
-    public void putImageData(@NonNull Integer index, @NonNull Byte data) {
-        //TODO: Add Test
-        byteBuffer.put(imageOffset + index, data);
-    }
-
-    @Override
     public @NonNull ByteBuffer getImageDataView() {
-        // TODO: Add Test
         return byteBuffer.slice(imageOffset, byteBuffer.limit() - imageOffset);
     }
 

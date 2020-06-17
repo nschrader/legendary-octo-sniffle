@@ -19,18 +19,6 @@ public interface IBmpFile {
     @NonNull DCommonFile getCommonFile();
 
     /**
-     * Get zero indexed image data
-     * @throws IndexOutOfBoundsException
-     */
-    @NonNull byte getImageData(@NonNull Integer index);
-
-    /**
-     * Put zero indexed image data
-     * @throws IndexOutOfBoundsException
-     */
-    void putImageData(@NonNull Integer index, @NonNull Byte data);
-
-    /**
      * @return A new ByteBuffer of the image data
      */
     @NonNull ByteBuffer getImageDataView();
