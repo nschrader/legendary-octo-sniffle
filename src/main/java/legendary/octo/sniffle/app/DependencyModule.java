@@ -6,14 +6,14 @@ import static legendary.octo.sniffle.core.EStegano.LSBI;
 
 import com.google.inject.AbstractModule;
 
-import legendary.octo.sniffle.cipher.CipherImpl;
-import legendary.octo.sniffle.cipher.RC4Impl;
 import legendary.octo.sniffle.core.IBmpFileIO;
 import legendary.octo.sniffle.core.ICipher;
 import legendary.octo.sniffle.core.IFileIO;
 import legendary.octo.sniffle.core.IRC4;
 import legendary.octo.sniffle.core.IStegano;
 import legendary.octo.sniffle.core.ISteganoFormatter;
+import legendary.octo.sniffle.crypto.CipherImpl;
+import legendary.octo.sniffle.crypto.RC4Impl;
 import legendary.octo.sniffle.io.BmpFileIO;
 import legendary.octo.sniffle.io.FileIO;
 import legendary.octo.sniffle.stegano.LSB1Impl;

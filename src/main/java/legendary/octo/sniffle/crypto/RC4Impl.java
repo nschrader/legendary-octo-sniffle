@@ -1,4 +1,4 @@
-package legendary.octo.sniffle.cipher;
+package legendary.octo.sniffle.crypto;
 
 import legendary.octo.sniffle.core.IRC4;
 import lombok.NonNull;
