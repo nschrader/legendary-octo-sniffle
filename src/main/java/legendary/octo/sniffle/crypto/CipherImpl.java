@@ -11,6 +11,7 @@ import legendary.octo.sniffle.core.ECipher;
 import legendary.octo.sniffle.core.EMode;
 import legendary.octo.sniffle.core.ICipher;
 import legendary.octo.sniffle.core.IJCAFactory;
+import legendary.octo.sniffle.core.IOpenSSLPBKDF;
 import legendary.octo.sniffle.error.CipherException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class CipherImpl implements ICipher {
 
     private final IJCAFactory<Cipher> cipherFactory;
     private final IJCAFactory<MessageDigest> messageDigestFactory;
+    private final IOpenSSLPBKDF openSSLPBKDF;
 
     @Override
     public byte[] encrypt(@NonNull byte[] data, @NonNull String password, @NonNull ECipher cipher, @NonNull EMode mode) {
@@ -38,7 +40,8 @@ public class CipherImpl implements ICipher {
             @NonNull EMode mode) {
         try {
             var sha256 = messageDigestFactory.getInstance("SHA-256");
-            var pbkdf = new OpenSSLPBKDF(getJCACipherName(cipher), sha256, password, null, getKeyLength(cipher), getIVLength(cipher, mode));
+            var pbkdf = openSSLPBKDF.of(getJCACipherName(cipher), sha256, password, null, 
+                getKeyLength(cipher), getIVLength(cipher, mode));
 
             var transformation = getJCATransformation(cipher, mode);
             var cipherInstance = cipherFactory.getInstance(transformation);
@@ -58,7 +61,12 @@ public class CipherImpl implements ICipher {
             case cbc -> "CBC";
         };
 
-        return String.format("%s/%s/NoPadding", getJCACipherName(cipher), m);
+        var p = switch(mode) {
+            case ecb, cbc -> "PKCS5Padding";
+            case cfb, ofb -> "NoPadding";
+        };
+
+        return String.format("%s/%s/%s", getJCACipherName(cipher), m, p);
     }
 
     private @NonNull String getJCACipherName(@NonNull ECipher cipher) {
@@ -73,7 +81,7 @@ public class CipherImpl implements ICipher {
             case aes128 -> 16;
             case aes192 -> 24;
             case aes256 -> 32;
-            case des -> 7;
+            case des -> 8;
         };
     }
 

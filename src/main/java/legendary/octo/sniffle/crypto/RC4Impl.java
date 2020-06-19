@@ -32,13 +32,13 @@ public class RC4Impl implements IRC4 {
         return b;
     }
 
-    static class RC4ImplStateMachine implements IRC4StateMachine {
+    private static class RC4ImplStateMachine implements IRC4StateMachine {
 
         private int[] S = new int[256];
         private int i = 0;
         private int j = 0;
 
-        public RC4ImplStateMachine(@NonNull byte[] key) {
+        private RC4ImplStateMachine(@NonNull byte[] key) {
             var k = unsignedByteArrayToIntArray(key);
             KSA(k);
         }
