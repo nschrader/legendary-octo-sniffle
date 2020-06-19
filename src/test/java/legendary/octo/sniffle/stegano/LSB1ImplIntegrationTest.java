@@ -1,30 +1,46 @@
 package legendary.octo.sniffle.stegano;
 
-import com.google.inject.Inject;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class LSB1ImplIntegrationTest extends ALSBIntegrationTest {
-    //TODO: Add error tests (nothing hidden, to big to hide, too small to hide something)
+import legendary.octo.sniffle.app.CryptoModule;
+import legendary.octo.sniffle.core.IBmpFileIO;
+import legendary.octo.sniffle.core.ICipher;
+import legendary.octo.sniffle.core.IFileIO;
+import legendary.octo.sniffle.core.IStegano;
+import legendary.octo.sniffle.core.ISteganoFormatter;
+import legendary.octo.sniffle.crypto.CipherImpl;
+import legendary.octo.sniffle.io.BmpFileIO;
+import legendary.octo.sniffle.io.FileIO;
 
-    @Inject
-    private LSB1Impl lsb1Impl;
+public class LSB1ImplIntegrationTest extends ALSBIntegrationSharedTest {
 
-    @Inject 
-    private SteganoFormatter f;
+    private static class TestModule extends AbstractModule {
+        @Override
+        public void configure() {
+            bind(IFileIO.class).to(FileIO.class);
+            bind(IBmpFileIO.class).to(BmpFileIO.class);
+            bind(IStegano.class).to(LSB1Impl.class);
+            bind(ISteganoFormatter.class).to(SteganoFormatter.class);
+            bind(ICipher.class).to(CipherImpl.class);
+        }
+    }
+
+    @BeforeEach
+    public void setUp() {
+        Guice.createInjector(new TestModule(), new CryptoModule()).injectMembers(this);
+    }
 
     @Test
     public void conceal() {
-        concealAndCompareAgainstTestVector(lsb1Impl, f, "lado.bmp", "itba.png", "ladoLSB1.bmp");
+        concealTestVector("lado.bmp", "itba.png", toPlaintext(), "ladoLSB1.bmp");
     }
 
     @Test
     public void reveal() {
-        revealAndCompareAgainstTestVector(lsb1Impl, f, "itba.png", "ladoLSB1.bmp");
-    }
-
-    @Test
-    public void invertible() {
-        concealAndReveal(lsb1Impl, f, "lado.bmp", "itba.png");
+        revealTestVector("itba.png", fromPlaintext(), "ladoLSB1.bmp");
     }
 }
