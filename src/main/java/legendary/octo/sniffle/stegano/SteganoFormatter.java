@@ -80,9 +80,15 @@ public class SteganoFormatter implements ISteganoFormatter {
 
     private int getLength(@NonNull ByteBuffer byteBuffer) {
         try {
-           return byteBuffer.getInt();
+           var length = byteBuffer.getInt();
+
+           if (length <= 0) {
+               throw new SteganoException("Malformed stegano header: Size field negative or zero");
+           }
+
+           return length;
         } catch (BufferUnderflowException e) {
-            throw new SteganoException(e, "Bitmap (%d bytes) too short to hide any data", byteBuffer.capacity());
+            throw new SteganoException(e, "Bitmap too short to hide any data");
         }
     }
 
@@ -92,7 +98,7 @@ public class SteganoFormatter implements ISteganoFormatter {
         try {
             byteBuffer.get(data, 0, length);
          } catch (BufferUnderflowException e) {
-             throw new SteganoException(e, "Malformed stegano header");
+             throw new SteganoException(e, "Malformed stegano header: Size field indicates more bytes (%d) than there are (%d)", length, byteBuffer.capacity());
          }
 
          return data;

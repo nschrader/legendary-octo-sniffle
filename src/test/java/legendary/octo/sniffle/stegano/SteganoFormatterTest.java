@@ -20,8 +20,8 @@ public class SteganoFormatterTest {
         Arrays.fill(in, (byte) 0xFF);
         var out = new SteganoFormatter().format(new DCommonFile("x", in));
 
-        assertArrayFilledWith(out, 0, 3, 0x00); // First 3 crumbs are null
-        assertArrayFilledWith(out, 3, 4, 0x0D); // Last crumb of size field contains 0x0D = 13
+        assertArrayFilledWith(out, 0, 3, 0x00); // First 3 crumbs are zero
+        assertArrayFilledWith(out, 3, 4, 0x0D); // Last crumb of size field contains 13
         assertArrayFilledWith(out, 4, 17, 0xFF); // Payload
         assertArrayFilledWith(out, 17, 18, 0x2E, 0x78, 0x00); // ".x\0"
         assertEquals(20, out.length);
@@ -44,8 +44,8 @@ public class SteganoFormatterTest {
         Arrays.fill(in, (byte) 0xFF);
         var out = new SteganoFormatter().formatEncrypted(in);
 
-        assertArrayFilledWith(out, 0, 3, 0x00); // First 3 crumbs of size field are null
-        assertArrayFilledWith(out, 3, 4, 0x0D); // Last crumb contains 0x0D = 13
+        assertArrayFilledWith(out, 0, 3, 0x00); // First 3 crumbs of size field are zero
+        assertArrayFilledWith(out, 3, 4, 0x0D); // Last crumb contains 13
         assertArrayFilledWith(out, 4, 17, 0xFF); // Payload
         assertEquals(17, out.length);
     }
@@ -53,7 +53,7 @@ public class SteganoFormatterTest {
     @Test
     public void testScan() {
         var in = new byte[14];
-        Arrays.fill(in, 0, 3, (byte) 0x00); // First 3 crumbs of size field are null
+        Arrays.fill(in, 0, 3, (byte) 0x00); // First 3 crumbs of size field are zero
         Arrays.fill(in, 3, 4, (byte) 0x07); // Last crumb contains 7
         Arrays.fill(in, 4, 11, (byte) 0xFF); // Payload
         Arrays.fill(in, 11, 12, (byte) 0x2E); // "."
@@ -69,7 +69,7 @@ public class SteganoFormatterTest {
     @Test
     public void testScanGibberishFileExtension() {
         var in = new byte[14];
-        Arrays.fill(in, 0, 3, (byte) 0x00); // First 3 crumbs of size field are null
+        Arrays.fill(in, 0, 3, (byte) 0x00); // First 3 crumbs of size field are zero
         Arrays.fill(in, 3, 4, (byte) 0x07); // Last crumb contains 7
         Arrays.fill(in, 4, 11, (byte) 0xFF); // Payload
         Arrays.fill(in, 11, 12, (byte) 0x78); // "x"
@@ -87,7 +87,7 @@ public class SteganoFormatterTest {
     @Test
     public void testScanUnterminatedFileExtension() {
         var in = new byte[13];
-        Arrays.fill(in, 0, 3, (byte) 0x00); // First 3 crumbs of size field are null
+        Arrays.fill(in, 0, 3, (byte) 0x00); // First 3 crumbs of size field are zero
         Arrays.fill(in, 3, 4, (byte) 0x07); // Last crumb contains 7
         Arrays.fill(in, 4, 11, (byte) 0xFF); // Payload
         Arrays.fill(in, 11, 12, (byte) 0x2E); // "."
@@ -102,27 +102,37 @@ public class SteganoFormatterTest {
     }
 
     @Test
-    public void testScanMalformed() {
-        var in = new byte[14];
-        Arrays.fill(in, 0, 3, (byte) 0x00); // First 3 crumbs of size field are null
+    public void testScanSizeTooBig() {
+        var in = new byte[11];
+        Arrays.fill(in, 0, 3, (byte) 0x00); // First 3 crumbs of size field are zero
         Arrays.fill(in, 3, 4, (byte) 0xBE); // Last crumb contains 190
         Arrays.fill(in, 4, 11, (byte) 0xFF); // Payload
-        Arrays.fill(in, 11, 12, (byte) 0x2E); // "."
-        Arrays.fill(in, 12, 13, (byte) 0x78); // "x"
-        Arrays.fill(in, 13, 14, (byte) 0x00); // NULL
 
         var formatter = new SteganoFormatter();
         assertTrue(
             assertThrows(SteganoException.class, () -> formatter.scan(in))
                 .getMessage()
-                .toLowerCase()
-                .contains("malformed"));
+                .matches("(?i)(?=.*malformed)(?=.*more bytes).*"));
+    }
+
+    @Test
+    public void testScanSizeNegative() {
+        var in = new byte[11];
+        Arrays.fill(in, 0, 3, (byte) 0xFF); // First 3 crumbs of size field are two's complement of 0 = -0
+        Arrays.fill(in, 3, 4, (byte) 0xFE); // Last crumb contains two's complement of 16 = -16
+        Arrays.fill(in, 4, 11, (byte) 0xFF); // Payload
+
+        var formatter = new SteganoFormatter();
+        assertTrue(
+            assertThrows(SteganoException.class, () -> formatter.scan(in))
+                .getMessage()
+                .matches("(?i)(?=.*malformed)(?=.*negative).*"));
     }
 
     @Test
     public void testScanEncrypted() {
         var in = new byte[11];
-        Arrays.fill(in, 0, 3, (byte) 0x00); // First 3 crumbs of size field are null
+        Arrays.fill(in, 0, 3, (byte) 0x00); // First 3 crumbs of size field are zero
         Arrays.fill(in, 3, 4, (byte) 0x07); // Last crumb contains 7
         Arrays.fill(in, 4, 11, (byte) 0xFF); // Payload
 
@@ -132,9 +142,9 @@ public class SteganoFormatterTest {
     }
 
     @Test
-    public void testScanEncryptedMalformed() {
+    public void testScanEncryptedSizeTooBig() {
         var in = new byte[11];
-        Arrays.fill(in, 0, 3, (byte) 0x00); // First 3 crumbs of size field are null
+        Arrays.fill(in, 0, 3, (byte) 0x00); // First 3 crumbs of size field are zero
         Arrays.fill(in, 3, 4, (byte) 0xBE); // Last crumb contains 190
         Arrays.fill(in, 4, 11, (byte) 0xFF); // Payload
 
@@ -142,7 +152,20 @@ public class SteganoFormatterTest {
         assertTrue(
             assertThrows(SteganoException.class, () -> formatter.scanEncrypted(in))
                 .getMessage()
-                .toLowerCase()
-                .contains("malformed"));
+                .matches("(?i)(?=.*malformed)(?=.*more bytes).*"));
+    }
+
+    @Test
+    public void testScanEncryptedSizeNegative() {
+        var in = new byte[11];
+        Arrays.fill(in, 0, 3, (byte) 0xFF); // First 3 crumbs of size field are two's complement of 0 = -0
+        Arrays.fill(in, 3, 4, (byte) 0xFE); // Last crumb contains two's complement of 16 = -16
+        Arrays.fill(in, 4, 11, (byte) 0xFF); // Payload
+
+        var formatter = new SteganoFormatter();
+        assertTrue(
+            assertThrows(SteganoException.class, () -> formatter.scanEncrypted(in))
+                .getMessage()
+                .matches("(?i)(?=.*malformed)(?=.*negative).*"));
     }
 }
