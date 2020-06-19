@@ -1,4 +1,4 @@
-package legendary.octo.sniffle.crypto;
+package legendary.octo.sniffle.crypto.internal;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

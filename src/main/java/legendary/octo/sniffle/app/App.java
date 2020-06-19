@@ -16,7 +16,7 @@ public class App {
     private CommandDispatcher commandDispatcher;
 
     public @NonNull Integer run(String... args) {
-        Guice.createInjector(new SkeletonModule(), new DependencyModule(), new CryptoModule()).injectMembers(this);
+        Guice.createInjector(new SkeletonModule(), new DependencyModule()).injectMembers(this);
         return new CommandLine(commandDispatcher).execute(args);
     }
 

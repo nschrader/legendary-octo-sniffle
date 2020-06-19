@@ -29,8 +29,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import legendary.octo.sniffle.core.ECipher;
 import legendary.octo.sniffle.core.EMode;
-import legendary.octo.sniffle.core.IJCAFactory;
-import legendary.octo.sniffle.core.IOpenSSLPBKDF;
+import legendary.octo.sniffle.crypto.internal.IJCAFactory;
+import legendary.octo.sniffle.crypto.internal.IOpenSSLPBKDF;
+import legendary.octo.sniffle.crypto.internal.OpenSSLPBKDF;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 

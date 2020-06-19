@@ -1,4 +1,4 @@
-package legendary.octo.sniffle.core;
+package legendary.octo.sniffle.crypto.internal;
 
 import java.security.MessageDigest;
 

@@ -1,4 +1,4 @@
-package legendary.octo.sniffle.crypto;
+package legendary.octo.sniffle.crypto.internal;
 
 import java.security.MessageDigest;
 
@@ -7,7 +7,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import com.google.common.primitives.Bytes;
 
-import legendary.octo.sniffle.core.IOpenSSLPBKDF;
 import lombok.NonNull;
 
 public class OpenSSLPBKDF implements IOpenSSLPBKDF {

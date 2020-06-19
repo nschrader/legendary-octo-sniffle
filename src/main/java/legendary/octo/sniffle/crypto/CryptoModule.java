@@ -1,4 +1,4 @@
-package legendary.octo.sniffle.app;
+package legendary.octo.sniffle.crypto;
 
 import java.security.MessageDigest;
 
@@ -7,9 +7,9 @@ import javax.crypto.Cipher;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
-import legendary.octo.sniffle.core.IJCAFactory;
-import legendary.octo.sniffle.core.IOpenSSLPBKDF;
-import legendary.octo.sniffle.crypto.OpenSSLPBKDF;
+import legendary.octo.sniffle.crypto.internal.IJCAFactory;
+import legendary.octo.sniffle.crypto.internal.IOpenSSLPBKDF;
+import legendary.octo.sniffle.crypto.internal.OpenSSLPBKDF;
 
 /**
  * Configure Guice dependency injection as an abstraction for 

@@ -13,6 +13,7 @@ import legendary.octo.sniffle.core.IRC4;
 import legendary.octo.sniffle.core.IStegano;
 import legendary.octo.sniffle.core.ISteganoFormatter;
 import legendary.octo.sniffle.crypto.CipherImpl;
+import legendary.octo.sniffle.crypto.CryptoModule;
 import legendary.octo.sniffle.crypto.RC4Impl;
 import legendary.octo.sniffle.io.BmpFileIO;
 import legendary.octo.sniffle.io.FileIO;
@@ -37,5 +38,6 @@ public class DependencyModule extends AbstractModule {
         bind(IStegano.class).annotatedWith(LSB1.named()).to(LSB1Impl.class);
         bind(IStegano.class).annotatedWith(LSB4.named()).to(LSB4Impl.class);
         bind(IStegano.class).annotatedWith(LSBI.named()).to(LSBIImpl.class);
+        install(new CryptoModule());
     }
 }
