@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'io.freefair.lombok' version '5.0.0'
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
     id 'com.adarshr.test-logger' version '2.0.0'
 }
 
@@ -33,6 +33,14 @@ dependencies {
 compileJava   {
   sourceCompatibility = '14'
   targetCompatibility = '14'
+}
+
+shadowJar {
+  minimize()
+}
+
+distributions {
+    shadow.contents.from 'README.md'
 }
 
 application {
