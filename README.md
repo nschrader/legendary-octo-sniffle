@@ -1,3 +1,7 @@
+# Requirements
+* Java 14
+* `./gradlew` will download Gradle and all other dependencies
+
 # Build
 
 There are several possibilities to build this project, depending on how you want to distribute and execute the application later.
