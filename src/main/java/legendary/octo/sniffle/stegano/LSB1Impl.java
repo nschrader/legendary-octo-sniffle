@@ -10,11 +10,11 @@ public class LSB1Impl implements IStegano {
 
     @Override
     public void conceal(@NonNull byte[] in, @NonNull IBmpFile bitmap) {
-        putBytesToHide(1, in, bitmap.getImageDataView());
+        putBytesToHide(1, in, bitmap.getImageDataView(),1);
     }
 
     @Override
     public @NonNull byte[] reveal(@NonNull IBmpFile bitmap) {
-        return getHiddenBytes(1, bitmap.getImageDataView());
+        return getHiddenBytes(1, bitmap.getImageDataView(),1);
     }
 }
