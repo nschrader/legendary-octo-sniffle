@@ -1,6 +1,6 @@
 package legendary.octo.sniffle.stegano;
 
-import static legendary.octo.sniffle.stegano.LSBnUtils.*;
+import static legendary.octo.sniffle.stegano.LSBUtils.*;
 
 import legendary.octo.sniffle.core.IBmpFile;
 import legendary.octo.sniffle.core.IStegano;
@@ -10,11 +10,13 @@ public class LSB1Impl implements IStegano {
 
     @Override
     public void conceal(@NonNull byte[] in, @NonNull IBmpFile bitmap) {
-        putBytesToHide(1, in, bitmap.getImageDataView());
+        var imageData = bitmap.getImageDataView();
+        putBytesToHide(1, in, imageData.capacity(), getSteadyImageDataGetter(imageData), imageData::put);
     }
 
     @Override
     public @NonNull byte[] reveal(@NonNull IBmpFile bitmap) {
-        return getHiddenBytes(1, bitmap.getImageDataView());
+        var imageData = bitmap.getImageDataView();
+        return getHiddenBytes(1, imageData.capacity(), imageData::get);
     }
 }

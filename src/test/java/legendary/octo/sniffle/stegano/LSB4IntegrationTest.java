@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import legendary.octo.sniffle.core.ECipher;
 import legendary.octo.sniffle.core.EMode;
 
-public class LSB4ImplIntegrationTest extends ALSBIntegrationSharedTest {
+public class LSB4IntegrationTest extends ALSBIntegrationSharedTest {
 
     @BeforeEach
     public void setUp() {

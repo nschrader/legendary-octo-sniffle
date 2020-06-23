@@ -52,6 +52,16 @@ public class AppIntegrationTest {
 
     @Test
     @SneakyThrows
+    public void testExtractLSBI(@TempDir Path dir) {
+        var bitmap = Resources.getResource("ladoLSBI.bmp").getPath();
+        var outFile = dir.resolve("outFile.png");
+
+        assertExitWithStatus(0, () -> App.main("-extract", "-p", bitmap, "-out", outFile.toString(), "-steg", "LSBI"));
+        assertArrayEquals(Resources.toByteArray(Resources.getResource("itba.png")), Files.readAllBytes(outFile));
+    }
+
+    @Test
+    @SneakyThrows
     public void testExtractEncrypted(@TempDir Path dir) {
         var bitmap = Resources.getResource("ladoLSB4aes256ofb.bmp").getPath();
         var outFile = dir.resolve("outFile.png");

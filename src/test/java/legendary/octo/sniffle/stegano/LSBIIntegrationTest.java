@@ -5,7 +5,7 @@ import com.google.inject.Guice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class LSBIImplIntegrationTest extends ALSBIntegrationSharedTest {
+public class LSBIIntegrationTest extends ALSBIntegrationSharedTest {
 
     @BeforeEach
     public void setUp() {
