@@ -21,6 +21,16 @@ public class BmpFileTest {
         assertEquals(5, file.getHeight());
         assertEquals(2835, file.getHorizontalResolution());
         assertEquals(2835, file.getVerticalResolution());
+        assertTrue(file.getImageOffset() != 54); // Contains color table
+    }
+
+    @Test
+    @SneakyThrows
+    public void testUnaligned() {
+        var file = new BmpFile(getCommonFile("unaligned.bmp"));
+        assertEquals(3, file.getWidth());
+        assertEquals(4, file.getHeight());
+        assertEquals(54 + 4*4*3, file.getFileSize());
     }
 
     @Test

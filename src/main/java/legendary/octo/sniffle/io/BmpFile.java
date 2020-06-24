@@ -73,7 +73,7 @@ public class BmpFile implements IBmpFile {
             "Inconsistent header sizes (%d and %d bytes)",
             headers, imageOffset);
 
-        var expectedRgbBytes = width*height*3;
+        var expectedRgbBytes = alignToDword(width)*height*3;
         var actualRgbBytes = fileSize - imageOffset;
         validate(expectedRgbBytes, actualRgbBytes,
             "Image data looks incomplete, should be %d bytes, but is %d bytes",
@@ -100,6 +100,10 @@ public class BmpFile implements IBmpFile {
         } catch (IndexOutOfBoundsException e) {
             throw new BmpFileException(e); 
         }
+    }
+
+    private @NonNull Integer alignToDword(@NonNull Integer off) {
+        return (int) Math.ceil(off/4.0) * 4;
     }
 
     @Override
