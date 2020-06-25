@@ -1,5 +1,6 @@
 package legendary.octo.sniffle.core;
 
+import legendary.octo.sniffle.error.SteganoException;
 import lombok.NonNull;
 
 public interface ISteganoFormatter {

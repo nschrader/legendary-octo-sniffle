@@ -11,8 +11,6 @@ import legendary.octo.sniffle.error.FileException;
 import lombok.NonNull;
 
 public class FileIO implements IFileIO {
-    public static final Integer MiB = 2 << 20;
-    public static final Integer MAX_BYTES = 50 * MiB;
 
     @Override
     public @NonNull DCommonFile read(@NonNull File file) {

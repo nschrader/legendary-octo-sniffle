@@ -3,7 +3,6 @@
 * `./gradlew` will download Gradle and all other dependencies
 
 # Build
-
 There are several possibilities to build this project, depending on how you want to distribute and execute the application later.
 
 * `./gradlew shadowDistZip` to generate `build/distributions/legendary-octo-sniffle-shadow.zip`. To run the application extract its contents somewhere and execute the `bin/legendary-octo-sniffle-shadow` shell script.
@@ -12,3 +11,9 @@ There are several possibilities to build this project, depending on how you want
 * `./gradlew test` for testing.
 
 You could also `./gradlew shadowJar` and then execute `java -jar legendary-octo-sniffle-all.jar` in `build/libs`, but there are some JVM arguments missing, leading to a warning message. Apart from that it's a legitimate alternative.
+
+# Test
+Run `./gradlew test` to perform 150+ unit and integration tests with some nice console output
+
+# Doc
+Run `./gradlew javadoc` to get your docs in `build/docs/javadoc/index.html`

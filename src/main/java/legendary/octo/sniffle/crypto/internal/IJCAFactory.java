@@ -4,7 +4,7 @@ import java.security.GeneralSecurityException;
 
 /**
  * Simple abstraction of a JCA Factory 
- * @param <T> Typically a factory of {@link java.security} or {@link javax.crypto}
+ * @param <T> Typically a factory of {@code java.security} or {@code javax.crypto}
  */
 @FunctionalInterface
 public interface IJCAFactory<T> {

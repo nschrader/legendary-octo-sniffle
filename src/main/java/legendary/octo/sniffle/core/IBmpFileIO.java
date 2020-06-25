@@ -2,6 +2,8 @@ package legendary.octo.sniffle.core;
 
 import java.io.File;
 
+import legendary.octo.sniffle.error.BmpFileException;
+import legendary.octo.sniffle.error.FileException;
 import lombok.NonNull;
 
 public interface IBmpFileIO {

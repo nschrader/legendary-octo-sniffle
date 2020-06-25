@@ -56,3 +56,7 @@ test {
     // Guice
     jvmArgs = ['--add-opens', 'java.base/java.lang=ALL-UNNAMED']
 }
+
+javadoc {
+    options.addStringOption('Xdoclint:none', '-quiet')
+}

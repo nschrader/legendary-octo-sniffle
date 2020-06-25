@@ -9,7 +9,8 @@ import lombok.NonNull;
 
 /**
  * Adapter for OenSSL's EVP_BytesToKey KDF
- * https://www.openssl.org/docs/manmaster/man3/EVP_BytesToKey.html
+ * 
+ * @see <a href="https://www.openssl.org/docs/manmaster/man3/EVP_BytesToKey.html">man(3) EVP_BytesToKey</a>
  */
 public interface IOpenSSLPBKDF {
 
