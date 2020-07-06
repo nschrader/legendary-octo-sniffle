@@ -30,6 +30,9 @@ lombok.config
 # Ignore Gradle build output directory
 build
 
+# Do not ignore gradlew
+!gradle/wrapper/gradle-wrapper.jar
+
 # Ignore VS Code
 *.code-workspace
 *.vscode
